@@ -48,9 +48,39 @@ x-init-ollama: &init-ollama
   entrypoint: /bin/sh
   environment:
     - OLLAMA_HOST=ollama:11434
+    - OLLAMA_MODEL=${OLLAMA_MODEL:-llama3.2}
+    - OLLAMA_ADDITIONAL_MODELS=${OLLAMA_ADDITIONAL_MODELS:-}
   command:
-    - "-c"
-    - "sleep 3; ollama pull llama3.2"
+    - -c
+    - |
+      echo "=== Ollama Model Pull Script ==="
+      sleep 3
+
+      # Pull primary model
+      if [ -n "$${OLLAMA_MODEL}" ]; then
+        echo "Pulling primary model: $${OLLAMA_MODEL}"
+        ollama pull "$${OLLAMA_MODEL}"
+      else
+        echo "Warning: OLLAMA_MODEL not set, skipping primary model pull"
+      fi
+
+      # Pull additional models if specified
+      if [ -n "$${OLLAMA_ADDITIONAL_MODELS}" ]; then
+        echo "Pulling additional models: $${OLLAMA_ADDITIONAL_MODELS}"
+
+        # Convert comma-separated list to space-separated
+        MODELS=$$(echo "$${OLLAMA_ADDITIONAL_MODELS}" | tr ',' ' ')
+
+        # Loop through each model
+        for model in $$MODELS; do
+          if [ -n "$$model" ]; then
+            echo "Pulling model: $$model"
+            ollama pull "$$model"
+          fi
+        done
+      else
+        echo "No additional models specified"
+      fi
 
 services:
 

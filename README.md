@@ -495,13 +495,46 @@ Technologies: Node.js, PostgreSQL, NestJS + Prisma
 
 ## 💡 Notes
 
-### Default Model
+### Model Configuration
 
-The Llama 3.2 model is installed by default. You can use different LLMs by simply changing the model name in the `docker-compose.yml` file:
+The Llama 3.2 model is installed by default. You can easily configure different models using environment variables.
 
-![alt text](readme_images/change-llm.png)
+#### Quick Start: Change the Primary Model
 
-To be able to use the new LLM, all containers must be shut down and removed. The setup can then be restarted.
+1. Edit the `.env` file:
+   ```bash
+   OLLAMA_MODEL=mixtral
+   ```
+
+2. Restart the containers:
+   ```bash
+   docker compose down
+   docker compose --profile gpu-nvidia up  # or your profile
+   ```
+
+#### Using Multiple Models
+
+To pull multiple models on startup for different workflows:
+
+1. Edit the `.env` file:
+   ```bash
+   OLLAMA_MODEL=llama3.2
+   OLLAMA_ADDITIONAL_MODELS=mixtral,codellama,phi3  # comma-separated
+   ```
+
+Note: For `OLLAMA_MODEL` and `OLLAMA_ADDITIONAL_MODELS` double check which
+version of Ollama is required to run them. It might be they are available only
+in pre-release versions, which are not tagged as `:latest` in Docker Hub and thus pulling them might fail. Identify the running version with `docker exec -it ollama ollama -v`
+
+2. Restart as above
+
+Available models: [Ollama Library](https://ollama.com/library)
+
+**Note**: Model changes in n8n workflows must be done manually via the n8n UI:
+1. Open the workflow in n8n
+2. Click on the "Ollama Chat Model" node
+3. Change the model field (e.g., from "llama3.2:latest" to "mixtral:latest")
+4. Save the workflow
 
 ### Change logfile
 
