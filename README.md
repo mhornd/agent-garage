@@ -322,6 +322,10 @@ It consists of several specialized AI agents that work together to solve more co
 | **Bugreport-Agent**  | - Generating structured bug reports based on analysis     | - Detailed description of a bug                                            | - Bugreport                                                           |
 | **User-Story-Agent** | - Generating structured user stories from requests        | - Idea for software feature                                                | - User story                                                          |
 
+#### Known Limitations
+
+- **Open WebUI Timeout Behaviour**: Open WebUI might run into timeouts on smaller models due to longer processing times. It seems that Open WebUI resends some data, which then results in multiple executions that make less and less sense as they contain partial information and partial chat history too.
+
 ### 3. Advanced Workflow: Spec-Driven Developer
 
 The **Spec-Driven Developer** is a comprehensive n8n workflow that transforms high-level project ideas into complete, specification-driven development documentation. This advanced workflow demonstrates the power of multi-agent orchestration for automating complex, multi-stage processes.

@@ -13,3 +13,6 @@ Thumbs.db
 
 # OpenWebUI model cache
 openwebui/cache/
+
+# Local environment
+.env
