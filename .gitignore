@@ -15,5 +15,4 @@ Thumbs.db
 openwebui/cache/
 
 # Local environment
-.env
 .mcp.json

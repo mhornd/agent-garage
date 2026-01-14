@@ -550,7 +550,100 @@ The workflow produces a complete implementation guide including:
 
    **Note:** Run this command from the root directory of the agent-garage repository where `application-arch.png` is located.
 
-5. Receive a markdown-formatted implementation guide in the response
+5. Receive a markdown-formatted implementation guide in the response like this one
+
+```md
+**Comprehensive Architecture Plan**
+=====================================
+
+### **Architecture Overview**
+
+This document outlines the technical architecture of our web application, focusing on the key components, data flow, and communication patterns. The system is built using a monolithic architecture with a clear separation of responsibilities between the frontend (Angular), backend (Spring Boot), and database (Postgres).
+
+### **Tech Stack Recommendations**
+
+*   Frontend:
+    *   Angular (TypeScript-based framework for building dynamic SPAs)
+    *   TypeScript
+    *   RxJS
+    *   Dependency injection
+*   Backend:
+    *   Spring Boot (Java-based framework for building RESTful APIs and handling business logic)
+    *   JPA (Java Persistence API) with Hibernate implementation
+    *   PostgreSQL (open-source relational database management system)
+*   Database:
+    *   Postgres (relational database with advanced features like JSON support and full-text search)
+*   Protocols/Standards:
+    *   REST (industry-standard architectural style for API design)
+    *   JSON (default data format for API responses)
+    *   SQL (underlying query language used by PostgreSQL)
+
+### **Data Model**
+
+The system has the following entities:
+
+| Entity | Description | Key Attributes |
+| --- | --- | --- |
+| User | Represents a user in the system | id, name, email, password |
+| Product | Represents a product in the system | id, name, description, price |
+| Order | Represents an order placed by a user | id, userId, productId, orderDate |
+
+The relationships between these entities are:
+
+*   One-to-many: User -> Order (one user can have multiple orders)
+*   Many-to-one: Product -> Order (multiple products can be part of one order)
+
+### **Local Setup**
+
+To set up the development environment locally, follow these steps:
+
+1.  Install Node.js and npm (the package manager for Node.js) on your system.
+2.  Create a new Angular project using `ng new my-app` (replace "my-app" with your desired app name).
+3.  Set up Spring Boot by creating a new Spring Boot project using `spring init --type=web` (replace "web" with the type you want to create).
+4.  Configure the database connection in both Angular and Spring Boot.
+5.  Install the required dependencies for Postgres.
+
+### **Security Considerations**
+
+To ensure security, consider the following best practices:
+
+*   Implement authentication and authorization mechanisms using OAuth 2.0 or JWT tokens.
+*   Use secure credentials for database connections (e.g., secret management via HashiCorp Vault or AWS Secrets Manager).
+*   Validate user input to prevent SQL injection attacks.
+
+### **Deployment Steps**
+
+To deploy the system, follow these steps:
+
+1.  Build and package both Angular and Spring Boot applications using their respective build tools.
+2.  Use a containerization strategy (e.g., Docker) to deploy the backend application.
+3.  Set up a load balancer (e.g., Nginx) to distribute incoming traffic across multiple instances of the backend application.
+4.  Configure the database connection and ensure it is properly secured.
+
+**Example Use Cases**
+--------------------
+
+### **User Registration**
+
+1.  The user interacts with the Angular frontend (e.g., submits a registration form).
+2.  The Angular application sends a `POST` request to the Spring Boot backend API (`/api/users`) with the user's registration information.
+3.  The Spring Boot application processes the request, creates a new user in the database, and returns a success response to the client.
+
+### **Order Placement**
+
+1.  The user interacts with the Angular frontend (e.g., selects products to add to their cart).
+2.  The Angular application sends a `POST` request to the Spring Boot backend API (`/api/orders`) with the selected product IDs.
+3.  The Spring Boot application processes the request, creates a new order in the database, and returns an order ID response to the client.
+
+**Best Practices**
+------------------
+
+*   Follow standard professional guidelines for code organization, naming conventions, and documentation.
+*   Use version control systems like Git to track changes and collaborate with team members.
+*   Implement continuous integration and continuous deployment (CI/CD) pipelines to automate testing, building, and deployment of the system.
+
+By following this comprehensive architecture plan, you can build a scalable, maintainable, and secure web application that meets the needs of your users.
+```
 
 #### Example Use Cases
 
@@ -580,9 +673,8 @@ The workflow produces a complete implementation guide including:
 #### Known Limitations
 
 - **Visual Model Requirements**: Requires a visual-capable LLM (qwen3-vl:8b or similar) for accurate diagram interpretation
-- **Image Quality**: Best results with clear, high-contrast diagrams where text is legible
-- **Hand-drawn Sketches**: May require clearer sketches for complex architectures
-- **Processing Time**: Visual analysis can take longer than text-only processing (typically 30-60 seconds)
+- **Performance**: The overall performance on running this local-only might be poor in terms of response times. Consider choosing a more potent model than llama3.2:3b
+. **State of the art**: It might be that you are recommended to Use Angullar 13 or Java 11. The goal is to showcase the flow, not the actuality of it `:)`
 
 ## 💡 Notes
 
