@@ -497,6 +497,93 @@ Technologies: Node.js, PostgreSQL, NestJS + Prisma
 - **LLM Agents**: 11 specialized agents with custom system and user messages
 - **Output Format**: Tarball containing organized markdown and YAML files
 
+### 4. Multi-Model Architecture Guide: Technical Architecture Analyzer
+
+The **Technical Architecture Analyzer** is an advanced n8n workflow that transforms hand-drawn sketches or technical architecture diagrams into comprehensive implementation plans. This workflow demonstrates the power of multi-model orchestration by combining visual and text-based LLMs to understand and document complex system architectures.
+
+- 🎨 **Multi-Model Approach**: Leverages both visual LLM (for image understanding) and text LLM (for detailed planning)
+- 📸 **Visual Input Processing**: Accepts architecture diagrams, sketches, or screenshots as input
+- 📋 **Structured Documentation**: Generates comprehensive markdown documentation with 6 key sections
+- 🏗️ **Implementation-Ready**: Provides actionable steps for local setup, deployment, and security
+
+#### What It Generates
+
+The workflow produces a complete implementation guide including:
+
+- **Architecture Overview**: High-level explanation of the system design and component interactions
+- **Tech Stack Recommendations**: Specific technologies, frameworks, and tools for each component
+- **Data Model**: Entity definitions, relationships, and key attributes (when applicable)
+- **Local Setup**: Step-by-step instructions for setting up the development environment
+- **Security Considerations**: Security concerns and best practices specific to the architecture
+- **Deployment Steps**: Deployment strategy with actionable implementation instructions
+
+#### How It Works
+
+1. **Visual Analysis Phase**:
+   - The first AI agent (using Ollama's visual model `qwen3-vl:8b`) analyzes the uploaded architecture diagram
+   - Identifies all components, services, connections, and data flows
+   - Recognizes architecture patterns (microservices, monolith, serverless, etc.)
+   - Outputs a comprehensive textual description of the architecture
+
+2. **Implementation Planning Phase**:
+   - The second AI agent (using Ollama `llama3.2`) receives the architecture understanding
+   - Generates a structured implementation plan with specific recommendations
+   - Creates markdown-formatted output organized into 6 sections
+   - Provides practical, real-world advice based on industry best practices
+
+3. **Response Delivery**:
+   - Returns the complete implementation guide as markdown
+   - Ready to be used as project documentation or shared with development teams
+
+#### Usage
+
+1. Navigate to the **Technical Architecture Analysis** workflow in n8n
+2. Review the workflow configuration and two-stage agent setup
+3. Activate the workflow
+4. Send a POST request to the webhook endpoint with your architecture diagram (from the repository root):
+
+   ```bash
+   curl -X POST \
+     http://localhost:5678/webhook/architecture-analysis \
+     -F "image=@application-arch.png"
+   ```
+
+   **Note:** Run this command from the root directory of the agent-garage repository where `application-arch.png` is located.
+
+5. Receive a markdown-formatted implementation guide in the response
+
+#### Example Use Cases
+
+- **Whiteboard Sessions**: Upload photos of whiteboard architecture sketches from planning sessions
+- **Legacy System Documentation**: Generate documentation for undocumented systems from architecture diagrams
+- **Client Presentations**: Transform client architecture proposals into detailed implementation plans
+- **Architecture Reviews**: Get structured analysis of proposed system designs
+- **Technical Onboarding**: Create comprehensive guides for new team members
+
+#### Key Features
+
+- **Two-Stage Processing**: Separates visual understanding from technical planning for better results
+- **Model Specialization**: Uses visual-capable model for image analysis, text model for planning
+- **Memory Context**: Each agent maintains conversation context through buffer memory
+- **Markdown Output**: Professional, well-structured documentation ready for immediate use
+- **Error Handling**: Configured with proper webhook response handling for reliability
+
+#### Technical Configuration
+
+- **Execution Order**: v1 (sequential processing)
+- **Visual Model**: Ollama qwen3-vl:8b (optimized for diagram understanding)
+- **Text Model**: Ollama llama3.2 (optimized for detailed planning)
+- **Memory**: Separate buffer windows for each agent stage
+- **Output Format**: Markdown with proper headers, lists, and code blocks
+- **Webhook Path**: `/architecture-analysis`
+
+#### Known Limitations
+
+- **Visual Model Requirements**: Requires a visual-capable LLM (qwen3-vl:8b or similar) for accurate diagram interpretation
+- **Image Quality**: Best results with clear, high-contrast diagrams where text is legible
+- **Hand-drawn Sketches**: May require clearer sketches for complex architectures
+- **Processing Time**: Visual analysis can take longer than text-only processing (typically 30-60 seconds)
+
 ## 💡 Notes
 
 ### Model Configuration
