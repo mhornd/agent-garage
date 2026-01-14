@@ -499,6 +499,8 @@ Technologies: Node.js, PostgreSQL, NestJS + Prisma
 
 ### 4. Multi-Model Architecture Guide: Technical Architecture Analyzer
 
+> **Prerequisites:** This workflow requires multiple Ollama models to be configured. See [Using Multiple Models](#using-multiple-models) for configuration instructions before using this workflow.
+
 The **Technical Architecture Analyzer** is an advanced n8n workflow that transforms hand-drawn sketches or technical architecture diagrams into comprehensive implementation plans. This workflow demonstrates the power of multi-model orchestration by combining visual and text-based LLMs to understand and document complex system architectures.
 
 - 🎨 **Multi-Model Approach**: Leverages both visual LLM (for image understanding) and text LLM (for detailed planning)
