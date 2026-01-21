@@ -322,6 +322,10 @@ It consists of several specialized AI agents that work together to solve more co
 | **Bugreport-Agent**  | - Generating structured bug reports based on analysis     | - Detailed description of a bug                                            | - Bugreport                                                           |
 | **User-Story-Agent** | - Generating structured user stories from requests        | - Idea for software feature                                                | - User story                                                          |
 
+#### Known Limitations
+
+- **Open WebUI Timeout Behaviour**: Open WebUI might run into timeouts on smaller models due to longer processing times. It seems that Open WebUI resends some data, which then results in multiple executions that make less and less sense as they contain partial information and partial chat history too.
+
 ### 3. Advanced Workflow: Spec-Driven Developer
 
 The **Spec-Driven Developer** is a comprehensive n8n workflow that transforms high-level project ideas into complete, specification-driven development documentation. This advanced workflow demonstrates the power of multi-agent orchestration for automating complex, multi-stage processes.
@@ -493,15 +497,229 @@ Technologies: Node.js, PostgreSQL, NestJS + Prisma
 - **LLM Agents**: 11 specialized agents with custom system and user messages
 - **Output Format**: Tarball containing organized markdown and YAML files
 
+### 4. Multi-Model Architecture Guide: Technical Architecture Analyzer
+
+> **Prerequisites:** This workflow requires multiple Ollama models to be configured. See [Using Multiple Models](#using-multiple-models) for configuration instructions before using this workflow.
+
+The **Technical Architecture Analyzer** is an advanced n8n workflow that transforms hand-drawn sketches or technical architecture diagrams into comprehensive implementation plans. This workflow demonstrates the power of multi-model orchestration by combining visual and text-based LLMs to understand and document complex system architectures.
+
+- 🎨 **Multi-Model Approach**: Leverages both visual LLM (for image understanding) and text LLM (for detailed planning)
+- 📸 **Visual Input Processing**: Accepts architecture diagrams, sketches, or screenshots as input
+- 📋 **Structured Documentation**: Generates comprehensive markdown documentation with 6 key sections
+- 🏗️ **Implementation-Ready**: Provides actionable steps for local setup, deployment, and security
+
+#### What It Generates
+
+The workflow produces a complete implementation guide including:
+
+- **Architecture Overview**: High-level explanation of the system design and component interactions
+- **Tech Stack Recommendations**: Specific technologies, frameworks, and tools for each component
+- **Data Model**: Entity definitions, relationships, and key attributes (when applicable)
+- **Local Setup**: Step-by-step instructions for setting up the development environment
+- **Security Considerations**: Security concerns and best practices specific to the architecture
+- **Deployment Steps**: Deployment strategy with actionable implementation instructions
+
+#### How It Works
+
+1. **Visual Analysis Phase**:
+   - The first AI agent (using Ollama's visual model `qwen3-vl:8b`) analyzes the uploaded architecture diagram
+   - Identifies all components, services, connections, and data flows
+   - Recognizes architecture patterns (microservices, monolith, serverless, etc.)
+   - Outputs a comprehensive textual description of the architecture
+
+2. **Implementation Planning Phase**:
+   - The second AI agent (using Ollama `llama3.2`) receives the architecture understanding
+   - Generates a structured implementation plan with specific recommendations
+   - Creates markdown-formatted output organized into 6 sections
+   - Provides practical, real-world advice based on industry best practices
+
+3. **Response Delivery**:
+   - Returns the complete implementation guide as markdown
+   - Ready to be used as project documentation or shared with development teams
+
+#### Usage
+
+1. Navigate to the **Technical Architecture Analysis** workflow in n8n
+2. Review the workflow configuration and two-stage agent setup
+3. Activate the workflow
+4. Send a POST request to the webhook endpoint with your architecture diagram (from the repository root):
+
+   ```bash
+   curl -X POST \
+     http://localhost:5678/webhook/architecture-analysis \
+     -F "image=@application-arch.png"
+   ```
+
+   **Note:** Run this command from the root directory of the agent-garage repository where `application-arch.png` is located.
+
+5. Receive a markdown-formatted implementation guide in the response like this one
+
+```md
+**Comprehensive Architecture Plan**
+=====================================
+
+### **Architecture Overview**
+
+This document outlines the technical architecture of our web application, focusing on the key components, data flow, and communication patterns. The system is built using a monolithic architecture with a clear separation of responsibilities between the frontend (Angular), backend (Spring Boot), and database (Postgres).
+
+### **Tech Stack Recommendations**
+
+*   Frontend:
+    *   Angular (TypeScript-based framework for building dynamic SPAs)
+    *   TypeScript
+    *   RxJS
+    *   Dependency injection
+*   Backend:
+    *   Spring Boot (Java-based framework for building RESTful APIs and handling business logic)
+    *   JPA (Java Persistence API) with Hibernate implementation
+    *   PostgreSQL (open-source relational database management system)
+*   Database:
+    *   Postgres (relational database with advanced features like JSON support and full-text search)
+*   Protocols/Standards:
+    *   REST (industry-standard architectural style for API design)
+    *   JSON (default data format for API responses)
+    *   SQL (underlying query language used by PostgreSQL)
+
+### **Data Model**
+
+The system has the following entities:
+
+| Entity | Description | Key Attributes |
+| --- | --- | --- |
+| User | Represents a user in the system | id, name, email, password |
+| Product | Represents a product in the system | id, name, description, price |
+| Order | Represents an order placed by a user | id, userId, productId, orderDate |
+
+The relationships between these entities are:
+
+*   One-to-many: User -> Order (one user can have multiple orders)
+*   Many-to-one: Product -> Order (multiple products can be part of one order)
+
+### **Local Setup**
+
+To set up the development environment locally, follow these steps:
+
+1.  Install Node.js and npm (the package manager for Node.js) on your system.
+2.  Create a new Angular project using `ng new my-app` (replace "my-app" with your desired app name).
+3.  Set up Spring Boot by creating a new Spring Boot project using `spring init --type=web` (replace "web" with the type you want to create).
+4.  Configure the database connection in both Angular and Spring Boot.
+5.  Install the required dependencies for Postgres.
+
+### **Security Considerations**
+
+To ensure security, consider the following best practices:
+
+*   Implement authentication and authorization mechanisms using OAuth 2.0 or JWT tokens.
+*   Use secure credentials for database connections (e.g., secret management via HashiCorp Vault or AWS Secrets Manager).
+*   Validate user input to prevent SQL injection attacks.
+
+### **Deployment Steps**
+
+To deploy the system, follow these steps:
+
+1.  Build and package both Angular and Spring Boot applications using their respective build tools.
+2.  Use a containerization strategy (e.g., Docker) to deploy the backend application.
+3.  Set up a load balancer (e.g., Nginx) to distribute incoming traffic across multiple instances of the backend application.
+4.  Configure the database connection and ensure it is properly secured.
+
+**Example Use Cases**
+--------------------
+
+### **User Registration**
+
+1.  The user interacts with the Angular frontend (e.g., submits a registration form).
+2.  The Angular application sends a `POST` request to the Spring Boot backend API (`/api/users`) with the user's registration information.
+3.  The Spring Boot application processes the request, creates a new user in the database, and returns a success response to the client.
+
+### **Order Placement**
+
+1.  The user interacts with the Angular frontend (e.g., selects products to add to their cart).
+2.  The Angular application sends a `POST` request to the Spring Boot backend API (`/api/orders`) with the selected product IDs.
+3.  The Spring Boot application processes the request, creates a new order in the database, and returns an order ID response to the client.
+
+**Best Practices**
+------------------
+
+*   Follow standard professional guidelines for code organization, naming conventions, and documentation.
+*   Use version control systems like Git to track changes and collaborate with team members.
+*   Implement continuous integration and continuous deployment (CI/CD) pipelines to automate testing, building, and deployment of the system.
+
+By following this comprehensive architecture plan, you can build a scalable, maintainable, and secure web application that meets the needs of your users.
+```
+
+#### Example Use Cases
+
+- **Whiteboard Sessions**: Upload photos of whiteboard architecture sketches from planning sessions
+- **Legacy System Documentation**: Generate documentation for undocumented systems from architecture diagrams
+- **Client Presentations**: Transform client architecture proposals into detailed implementation plans
+- **Architecture Reviews**: Get structured analysis of proposed system designs
+- **Technical Onboarding**: Create comprehensive guides for new team members
+
+#### Key Features
+
+- **Two-Stage Processing**: Separates visual understanding from technical planning for better results
+- **Model Specialization**: Uses visual-capable model for image analysis, text model for planning
+- **Memory Context**: Each agent maintains conversation context through buffer memory
+- **Markdown Output**: Professional, well-structured documentation ready for immediate use
+- **Error Handling**: Configured with proper webhook response handling for reliability
+
+#### Technical Configuration
+
+- **Execution Order**: v1 (sequential processing)
+- **Visual Model**: Ollama qwen3-vl:8b (optimized for diagram understanding)
+- **Text Model**: Ollama llama3.2 (optimized for detailed planning)
+- **Memory**: Separate buffer windows for each agent stage
+- **Output Format**: Markdown with proper headers, lists, and code blocks
+- **Webhook Path**: `/architecture-analysis`
+
+#### Known Limitations
+
+- **Visual Model Requirements**: Requires a visual-capable LLM (qwen3-vl:8b or similar) for accurate diagram interpretation
+- **Performance**: The overall performance on running this local-only might be poor in terms of response times. Consider choosing a more potent model than llama3.2:3b
+. **State of the art**: It might be that you are recommended to Use Angullar 13 or Java 11. The goal is to showcase the flow, not the actuality of it `:)`
+
 ## 💡 Notes
 
-### Default Model
+### Model Configuration
 
-The Llama 3.2 model is installed by default. You can use different LLMs by simply changing the model name in the `docker-compose.yml` file:
+The Llama 3.2 model is installed by default. You can easily configure different models using environment variables.
 
-![alt text](readme_images/change-llm.png)
+#### Quick Start: Change the Primary Model
 
-To be able to use the new LLM, all containers must be shut down and removed. The setup can then be restarted.
+1. Edit the `.env` file:
+   ```bash
+   OLLAMA_MODEL=mixtral
+   ```
+
+2. Restart the containers:
+   ```bash
+   docker compose down
+   docker compose --profile gpu-nvidia up  # or your profile
+   ```
+
+#### Using Multiple Models
+
+To pull multiple models on startup for different workflows:
+
+1. Edit the `.env` file:
+   ```bash
+   OLLAMA_MODEL=llama3.2
+   OLLAMA_ADDITIONAL_MODELS=mixtral,codellama,phi3  # comma-separated
+   ```
+
+Note: For `OLLAMA_MODEL` and `OLLAMA_ADDITIONAL_MODELS` double check which
+version of Ollama is required to run them. It might be they are available only
+in pre-release versions, which are not tagged as `:latest` in Docker Hub and thus pulling them might fail. Identify the running version with `docker exec -it ollama ollama -v`
+
+2. Restart as above
+
+Available models: [Ollama Library](https://ollama.com/library)
+
+**Note**: Model changes in n8n workflows must be done manually via the n8n UI:
+1. Open the workflow in n8n
+2. Click on the "Ollama Chat Model" node
+3. Change the model field (e.g., from "llama3.2:latest" to "mixtral:latest")
+4. Save the workflow
 
 ### Change logfile
 
