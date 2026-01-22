@@ -255,6 +255,12 @@ Advanced workflows demonstrate sophisticated multi-agent orchestration:
 
 - The **Spec-Driven Developer** (labeled 3) is a comprehensive workflow that transforms project ideas into complete specification packages using 11 specialized LLM agents working in sequence and parallel.
 
+🟦 **Multi-Modal / Multi-Model Workflows**
+
+Workflow to demonstrate multi-modal (different forms of information) understanding of a workflow by utilising two different models.
+
+- The **Technical Architecture Analysis** (labeled 4) is a two-step workflow that accepts architecture scatches and diagrams as input (image), understand that content through a visual model, forwards it learnings to a text model to generate an implementation plan for that architecture.
+
 ---
 
 ### 1. Simple Workflow – _User Story Creator_
@@ -498,6 +504,8 @@ Technologies: Node.js, PostgreSQL, NestJS + Prisma
 - **Output Format**: Tarball containing organized markdown and YAML files
 
 ### 4. Multi-Model Architecture Guide: Technical Architecture Analyzer
+
+![alt text](readme_images/Technical-Architecture-n8n.png)
 
 > **Prerequisites:** This workflow requires multiple Ollama models to be configured. See [Using Multiple Models](#using-multiple-models) for configuration instructions before using this workflow.
 
