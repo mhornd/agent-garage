@@ -259,7 +259,7 @@ Advanced workflows demonstrate sophisticated multi-agent orchestration:
 
 Workflow to demonstrate multi-modal (different forms of information) understanding of a workflow by utilising two different models.
 
-- The ** Technical Architecture Analysis** (labeled 4) is a two-step workflow that accepts architecture scatches and diagrams as input (image), understand that content through a visual model, forwards it learnings to a text model to generate an implementation plan for that architecture.
+- The **Technical Architecture Analysis** (labeled 4) is a two-step workflow that accepts architecture scatches and diagrams as input (image), understand that content through a visual model, forwards it learnings to a text model to generate an implementation plan for that architecture.
 
 ---
 
