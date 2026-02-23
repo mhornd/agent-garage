@@ -1,0 +1,111 @@
+{
+  "name": "6 Requirements Agent",
+  "nodes": [
+    {
+      "parameters": {
+        "inputSource": "passthrough"
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [-300, 0],
+      "id": "req-0001-trig-0000-000000000001",
+      "name": "When Called by Supervisor"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.query }}",
+        "options": {
+          "systemMessage": "You are the Requirements Agent — the specialist for the Requirements phase of the software development lifecycle.\n\nYour responsibilities:\n- Elicit, extract, and structure software requirements\n- Generate user stories with acceptance criteria\n- Detect conflicts and gaps in requirements\n- Classify, prioritize, and validate requirements\n- Trace requirements across the project\n\nAvailable skills (call load_skill with the skill name to get full instructions):\n- elicit-requirements\n- extract-requirements\n- generate-user-stories\n- detect-conflicts\n- gap-analysis\n- classify-requirements\n- prioritize-requirements\n- validate-requirements\n- trace-requirements\n- generate-requirements-document\n- stakeholder-sentiment\n- simulate-stakeholder\n- visualize-requirements\n- voc-analysis\n- predict-change-impact\n- prototype-from-requirements\n\nHow to work:\n1. Understand what the user needs (which type of requirements work?)\n2. Call load_skill with the most relevant skill name to get detailed instructions\n3. Follow those instructions to deliver the output\n4. If the task spans multiple skills, handle them in sequence\n\nAlways respond in the same language the user writes in."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [0, 0],
+      "id": "req-0002-agnt-0000-000000000002",
+      "name": "Requirements Agent"
+    },
+    {
+      "parameters": {
+        "model": "llama3.2",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmOllama",
+      "typeVersion": 1,
+      "position": [-160, 240],
+      "id": "req-0003-llm0-0000-000000000003",
+      "name": "Ollama LLM",
+      "credentials": {
+        "ollamaApi": {
+          "id": "REPLACE_AFTER_IMPORT",
+          "name": "Ollama"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionKey": "={{ $json.sessionId }}",
+        "contextWindowLength": 20
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [40, 240],
+      "id": "req-0004-mem0-0000-000000000004",
+      "name": "Window Buffer Memory"
+    },
+    {
+      "parameters": {
+        "name": "load_skill",
+        "description": "Load a skill definition from the marketplace. Pass the skill name to get full instructions for that skill (e.g. 'generate-user-stories', 'detect-conflicts', 'elicit-requirements').",
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "REPLACE_AFTER_IMPORT"
+        },
+        "fields": {
+          "values": [
+            {
+              "name": "query",
+              "stringValue": "={{ $fromAI('skill_name', 'The skill name to load from the requirements phase') }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 1.2,
+      "position": [240, 240],
+      "id": "req-0005-tool-0000-000000000005",
+      "name": "load_skill"
+    }
+  ],
+  "connections": {
+    "When Called by Supervisor": {
+      "main": [
+        [{ "node": "Requirements Agent", "type": "main", "index": 0 }]
+      ]
+    },
+    "Ollama LLM": {
+      "ai_languageModel": [
+        [{ "node": "Requirements Agent", "type": "ai_languageModel", "index": 0 }]
+      ]
+    },
+    "Window Buffer Memory": {
+      "ai_memory": [
+        [{ "node": "Requirements Agent", "type": "ai_memory", "index": 0 }]
+      ]
+    },
+    "load_skill": {
+      "ai_tool": [
+        [{ "node": "Requirements Agent", "type": "ai_tool", "index": 0 }]
+      ]
+    }
+  },
+  "pinData": {},
+  "settings": { "executionOrder": "v1" },
+  "staticData": null,
+  "tags": ["sdlc", "requirements"],
+  "triggerCount": 0,
+  "updatedAt": "2026-02-20T00:00:00.000Z",
+  "versionId": "1"
+}

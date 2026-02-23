@@ -35,7 +35,7 @@
 | --------------------------- | ------------------ | ----------------------------------------------------------- |
 | 5 SDLC-Phase-Orchestratoren | ⚠️ Stubs           | Requirements, Dev, Testing, Release, Ops — Markdown-Prompts |
 | 21 Agenten-Definitionen     | ⚠️ Stubs           | Orchestratoren + Spezialisten pro Phase                     |
-| 80+ Skill-Definitionen      | ⚠️ Stubs           | SKILL.md mit Platzhalter-Inhalt                             |
+| 80+ Skill-Definitionen      | ✅ Vollständig     | SKILL.md mit Inhalt                                         |
 | 14 MCP Server               | ⚠️ Stubs           | Python-Gerüste, ~40 Zeilen, nicht implementiert             |
 | Claimification Plugin       | ✅ Produktionsreif | 9 Skills, 2 MCP Server, vollständige Python-Implementierung |
 
@@ -326,6 +326,7 @@ Dev-Agent
 **Implementierung in n8n:** `load_skill` ist ein **Custom Code Tool** (~20 Zeilen JS) der die entsprechende SKILL.md aus dem Dateisystem liest. Einmaliger Baustein — nicht 80x wiederholt.
 
 **Vorteil gegenüber Alternativen:**
+
 - SKILL.md bleibt Single Source of Truth für beide Welten (Claude Code CLI + Agent Garage)
 - Keine Prompt-Inflation im Phase-Agent
 - Neue Skills einfach als neue Markdown-Datei hinzufügen — kein neuer n8n-Workflow nötig

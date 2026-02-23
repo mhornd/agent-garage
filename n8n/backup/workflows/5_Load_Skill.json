@@ -1,0 +1,47 @@
+{
+  "name": "5 Load-Skill",
+  "nodes": [
+    {
+      "parameters": {
+        "inputSource": "passthrough"
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [-280, 160],
+      "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+      "name": "When Executed by Supervisor"
+    },
+    {
+      "parameters": {
+        "jsCode": "const fs = require('fs');\n\n// Find skill name — try every possible field name the calling agent might use\nconst raw = $input.first().json;\nlet skillName = raw.query\n  ?? raw.skill_name\n  ?? raw.skillName\n  ?? raw.input\n  ?? raw.chatInput\n  ?? raw.text;\n\n// One level deeper in case input is wrapped (e.g. raw.body.query)\nif (!skillName || skillName === 'undefined') {\n  const nested = raw.body ?? raw.data ?? raw.payload;\n  if (nested && typeof nested === 'object') {\n    skillName = nested.query ?? nested.skill_name ?? nested.input;\n  }\n}\n\n// Still nothing — return helpful error with what we actually received\nif (!skillName || skillName === 'undefined') {\n  return [{\n    json: {\n      error: 'No skill name received.',\n      received_input: raw,\n      hint: 'Pass a skill name like \"generate-user-stories\" or \"classify-requirements\".'\n    }\n  }];\n}\n\n// Strip phase prefix if the agent sends \"requirements/classify-requirements\" → \"classify-requirements\"\nconst cleanName = skillName.includes('/') ? skillName.split('/').pop() : skillName;\n\nconst basePath = '/data/marketplace/sdlc';\nconst phases = ['requirements', 'development', 'testing', 'release-management', 'operations'];\n\nfor (const phase of phases) {\n  const filePath = `${basePath}/${phase}/skills/${cleanName}/SKILL.md`;\n  if (fs.existsSync(filePath)) {\n    const content = fs.readFileSync(filePath, 'utf8');\n    return [{ json: { skill: cleanName, phase, content } }];\n  }\n}\n\n// Skill not found — list available skills to help the agent pick the right name\nconst available = [];\nfor (const phase of phases) {\n  const dir = `${basePath}/${phase}/skills`;\n  if (fs.existsSync(dir)) {\n    fs.readdirSync(dir).forEach(s => available.push(`${phase}/${s}`));\n  }\n}\n\nreturn [{\n  json: {\n    error: `Skill '${cleanName}' not found.`,\n    available_skills: available\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [0, 160],
+      "id": "b2c3d4e5-f6a7-8901-bcde-f12345678901",
+      "name": "Read SKILL.md"
+    }
+  ],
+  "connections": {
+    "When Executed by Supervisor": {
+      "main": [
+        [
+          {
+            "node": "Read SKILL.md",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": ["sdlc", "marketplace"],
+  "triggerCount": 0,
+  "updatedAt": "2026-02-20T00:00:00.000Z",
+  "versionId": "2"
+}

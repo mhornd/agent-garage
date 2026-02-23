@@ -1,0 +1,111 @@
+{
+  "name": "6 Release Agent",
+  "nodes": [
+    {
+      "parameters": {
+        "inputSource": "passthrough"
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [-300, 0],
+      "id": "rel-0001-trig-0000-000000000001",
+      "name": "When Called by Supervisor"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.query }}",
+        "options": {
+          "systemMessage": "You are the Release Agent — the specialist for the Release Management phase of the software development lifecycle.\n\nYour responsibilities:\n- Generate changelogs and release notes\n- Plan deployment strategies and rollback options\n- Manage version bumps and release risk assessment\n- Create go-to-market checklists and stakeholder updates\n- Assess feature lifecycle and prioritize features for releases\n- Generate roadmaps and OKR management support\n- Support post-release reporting\n\nAvailable skills (call load_skill with the skill name to get full instructions):\n- changelog\n- release-notes\n- deployment-plan\n- deployment-strategy\n- rollback-plan\n- version-bump\n- release-risk-assessment\n- gtm-checklist\n- stakeholder-update\n- prioritize-features\n- generate-roadmap\n- post-release-report\n- lifecycle-assessment\n- okr-management\n- feature-flag-strategy\n\nHow to work:\n1. Understand what the user needs (which type of release task?)\n2. Call load_skill with the most relevant skill name to get detailed instructions\n3. Follow those instructions to deliver the output\n4. If the task spans multiple skills, handle them in sequence\n\nAlways respond in the same language the user writes in."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [0, 0],
+      "id": "rel-0002-agnt-0000-000000000002",
+      "name": "Release Agent"
+    },
+    {
+      "parameters": {
+        "model": "llama3.2",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmOllama",
+      "typeVersion": 1,
+      "position": [-160, 240],
+      "id": "rel-0003-llm0-0000-000000000003",
+      "name": "Ollama LLM",
+      "credentials": {
+        "ollamaApi": {
+          "id": "REPLACE_AFTER_IMPORT",
+          "name": "Ollama"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionKey": "={{ $json.sessionId }}",
+        "contextWindowLength": 20
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [40, 240],
+      "id": "rel-0004-mem0-0000-000000000004",
+      "name": "Window Buffer Memory"
+    },
+    {
+      "parameters": {
+        "name": "load_skill",
+        "description": "Load a skill definition from the marketplace. Pass the skill name to get full instructions for that skill (e.g. 'changelog', 'deployment-plan', 'rollback-plan').",
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "REPLACE_AFTER_IMPORT"
+        },
+        "fields": {
+          "values": [
+            {
+              "name": "query",
+              "stringValue": "={{ $fromAI('skill_name', 'The skill name to load from the release management phase') }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 1.2,
+      "position": [240, 240],
+      "id": "rel-0005-tool-0000-000000000005",
+      "name": "load_skill"
+    }
+  ],
+  "connections": {
+    "When Called by Supervisor": {
+      "main": [
+        [{ "node": "Release Agent", "type": "main", "index": 0 }]
+      ]
+    },
+    "Ollama LLM": {
+      "ai_languageModel": [
+        [{ "node": "Release Agent", "type": "ai_languageModel", "index": 0 }]
+      ]
+    },
+    "Window Buffer Memory": {
+      "ai_memory": [
+        [{ "node": "Release Agent", "type": "ai_memory", "index": 0 }]
+      ]
+    },
+    "load_skill": {
+      "ai_tool": [
+        [{ "node": "Release Agent", "type": "ai_tool", "index": 0 }]
+      ]
+    }
+  },
+  "pinData": {},
+  "settings": { "executionOrder": "v1" },
+  "staticData": null,
+  "tags": ["sdlc", "release-management"],
+  "triggerCount": 0,
+  "updatedAt": "2026-02-20T00:00:00.000Z",
+  "versionId": "1"
+}

@@ -1,0 +1,288 @@
+[
+  {
+    "id": "sdlc-supervisor",
+    "user_id": "ab49a768-7a65-422b-842d-05a2aab68367",
+    "base_model_id": "n8n_pipe_clone",
+    "name": "SDLC Supervisor",
+    "params": {},
+    "meta": {
+      "profile_image_url": "/static/favicon.png",
+      "description": "Koordiniert alle SDLC-Phasen: Requirements, Entwicklung, Testing, Release und Operations. Lädt spezialisierte Skills aus dem Marketplace.",
+      "capabilities": {
+        "file_context": true,
+        "vision": true,
+        "file_upload": true,
+        "web_search": false,
+        "image_generation": false,
+        "code_interpreter": false,
+        "citations": true,
+        "status_updates": true,
+        "builtin_tools": true
+      },
+      "suggestion_prompts": null,
+      "tags": [{ "name": "sdlc" }, { "name": "supervisor" }],
+      "builtinTools": {
+        "time": true,
+        "memory": true,
+        "chats": true,
+        "notes": true,
+        "knowledge": true,
+        "channels": false,
+        "web_search": false,
+        "image_generation": false,
+        "code_interpreter": false
+      }
+    },
+    "access_grants": [],
+    "is_active": true,
+    "updated_at": 1771606399,
+    "created_at": 1771606399,
+    "user": {
+      "id": "ab49a768-7a65-422b-842d-05a2aab68367",
+      "name": "Admin",
+      "role": "admin",
+      "email": "admin@test.com"
+    },
+    "write_access": true
+  },
+  {
+    "id": "requirements-engineer",
+    "user_id": "ab49a768-7a65-422b-842d-05a2aab68367",
+    "base_model_id": "n8n_pipe_clone",
+    "name": "Requirements Engineer",
+    "params": {
+      "system": "Du bist ein Requirements Engineer. Fokussiere dich auf Anforderungsanalyse, User Stories, Akzeptanzkriterien und Anforderungsdokumentation."
+    },
+    "meta": {
+      "profile_image_url": "/static/favicon.png",
+      "description": "Spezialist für Anforderungsanalyse: User Stories, Akzeptanzkriterien, Stakeholder-Analyse, Konflikt-Erkennung und Anforderungs-Extraktion.",
+      "capabilities": {
+        "file_context": true,
+        "vision": true,
+        "file_upload": true,
+        "web_search": false,
+        "image_generation": false,
+        "code_interpreter": false,
+        "citations": true,
+        "status_updates": true,
+        "builtin_tools": true
+      },
+      "suggestion_prompts": null,
+      "tags": [{ "name": "sdlc" }, { "name": "requirements" }],
+      "builtinTools": {
+        "time": true,
+        "memory": true,
+        "chats": true,
+        "notes": true,
+        "knowledge": true,
+        "channels": false,
+        "web_search": false,
+        "image_generation": false,
+        "code_interpreter": false
+      }
+    },
+    "access_grants": [],
+    "is_active": true,
+    "updated_at": 1771606399,
+    "created_at": 1771606399,
+    "user": {
+      "id": "ab49a768-7a65-422b-842d-05a2aab68367",
+      "name": "Admin",
+      "role": "admin",
+      "email": "admin@test.com"
+    },
+    "write_access": true
+  },
+  {
+    "id": "code-companion",
+    "user_id": "ab49a768-7a65-422b-842d-05a2aab68367",
+    "base_model_id": "n8n_pipe_clone",
+    "name": "Code Companion",
+    "params": {
+      "system": "Du bist ein Code Companion. Fokussiere dich auf Implementierung, Code-Qualität, Debugging, Refactoring und technische Dokumentation."
+    },
+    "meta": {
+      "profile_image_url": "/static/favicon.png",
+      "description": "Unterstützt bei Implementierung, Code-Review, Debugging, Refactoring und Dokumentation.",
+      "capabilities": {
+        "file_context": true,
+        "vision": true,
+        "file_upload": true,
+        "web_search": false,
+        "image_generation": false,
+        "code_interpreter": false,
+        "citations": true,
+        "status_updates": true,
+        "builtin_tools": true
+      },
+      "suggestion_prompts": null,
+      "tags": [{ "name": "sdlc" }, { "name": "development" }],
+      "builtinTools": {
+        "time": true,
+        "memory": true,
+        "chats": true,
+        "notes": true,
+        "knowledge": true,
+        "channels": false,
+        "web_search": false,
+        "image_generation": false,
+        "code_interpreter": false
+      }
+    },
+    "access_grants": [],
+    "is_active": true,
+    "updated_at": 1771606399,
+    "created_at": 1771606399,
+    "user": {
+      "id": "ab49a768-7a65-422b-842d-05a2aab68367",
+      "name": "Admin",
+      "role": "admin",
+      "email": "admin@test.com"
+    },
+    "write_access": true
+  },
+  {
+    "id": "test-commander",
+    "user_id": "ab49a768-7a65-422b-842d-05a2aab68367",
+    "base_model_id": "n8n_pipe_clone",
+    "name": "Test Commander",
+    "params": {
+      "system": "Du bist ein Test Commander. Fokussiere dich auf Testplanung, Testgenerierung, Coverage-Analyse und Qualitätssicherung."
+    },
+    "meta": {
+      "profile_image_url": "/static/favicon.png",
+      "description": "Plant und generiert Tests: Unit Tests, E2E Tests, Testpläne, Coverage-Analyse und Performance-Tests.",
+      "capabilities": {
+        "file_context": true,
+        "vision": true,
+        "file_upload": true,
+        "web_search": false,
+        "image_generation": false,
+        "code_interpreter": false,
+        "citations": true,
+        "status_updates": true,
+        "builtin_tools": true
+      },
+      "suggestion_prompts": null,
+      "tags": [{ "name": "sdlc" }, { "name": "testing" }],
+      "builtinTools": {
+        "time": true,
+        "memory": true,
+        "chats": true,
+        "notes": true,
+        "knowledge": true,
+        "channels": false,
+        "web_search": false,
+        "image_generation": false,
+        "code_interpreter": false
+      }
+    },
+    "access_grants": [],
+    "is_active": true,
+    "updated_at": 1771606399,
+    "created_at": 1771606399,
+    "user": {
+      "id": "ab49a768-7a65-422b-842d-05a2aab68367",
+      "name": "Admin",
+      "role": "admin",
+      "email": "admin@test.com"
+    },
+    "write_access": true
+  },
+  {
+    "id": "release-pilot",
+    "user_id": "ab49a768-7a65-422b-842d-05a2aab68367",
+    "base_model_id": "n8n_pipe_clone",
+    "name": "Release Pilot",
+    "params": {
+      "system": "Du bist ein Release Pilot. Fokussiere dich auf Release-Vorbereitung, Deployment-Strategien, Changelogs und Release-Kommunikation."
+    },
+    "meta": {
+      "profile_image_url": "/static/favicon.png",
+      "description": "Koordiniert Releases: Changelogs, Release Notes, Deployment-Strategien, Rollback-Pläne und Feature Flags.",
+      "capabilities": {
+        "file_context": true,
+        "vision": true,
+        "file_upload": true,
+        "web_search": false,
+        "image_generation": false,
+        "code_interpreter": false,
+        "citations": true,
+        "status_updates": true,
+        "builtin_tools": true
+      },
+      "suggestion_prompts": null,
+      "tags": [{ "name": "sdlc" }, { "name": "release" }],
+      "builtinTools": {
+        "time": true,
+        "memory": true,
+        "chats": true,
+        "notes": true,
+        "knowledge": true,
+        "channels": false,
+        "web_search": false,
+        "image_generation": false,
+        "code_interpreter": false
+      }
+    },
+    "access_grants": [],
+    "is_active": true,
+    "updated_at": 1771606399,
+    "created_at": 1771606399,
+    "user": {
+      "id": "ab49a768-7a65-422b-842d-05a2aab68367",
+      "name": "Admin",
+      "role": "admin",
+      "email": "admin@test.com"
+    },
+    "write_access": true
+  },
+  {
+    "id": "ops-intelligence",
+    "user_id": "ab49a768-7a65-422b-842d-05a2aab68367",
+    "base_model_id": "n8n_pipe_clone",
+    "name": "Ops Intelligence",
+    "params": {
+      "system": "Du bist ein Ops Intelligence Agent. Fokussiere dich auf Incident Response, Root Cause Analysis, Monitoring und SRE-Aufgaben."
+    },
+    "meta": {
+      "profile_image_url": "/static/favicon.png",
+      "description": "SRE-Spezialist: Incident Response, Root Cause Analysis, Log-Analyse, SLO-Management und Anomalie-Erkennung.",
+      "capabilities": {
+        "file_context": true,
+        "vision": true,
+        "file_upload": true,
+        "web_search": false,
+        "image_generation": false,
+        "code_interpreter": false,
+        "citations": true,
+        "status_updates": true,
+        "builtin_tools": true
+      },
+      "suggestion_prompts": null,
+      "tags": [{ "name": "sdlc" }, { "name": "operations" }],
+      "builtinTools": {
+        "time": true,
+        "memory": true,
+        "chats": true,
+        "notes": true,
+        "knowledge": true,
+        "channels": false,
+        "web_search": false,
+        "image_generation": false,
+        "code_interpreter": false
+      }
+    },
+    "access_grants": [],
+    "is_active": true,
+    "updated_at": 1771606399,
+    "created_at": 1771606399,
+    "user": {
+      "id": "ab49a768-7a65-422b-842d-05a2aab68367",
+      "name": "Admin",
+      "role": "admin",
+      "email": "admin@test.com"
+    },
+    "write_access": true
+  }
+]
