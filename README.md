@@ -1,8 +1,8 @@
 # Agentic Agent Garage
 
-**Your engineering team has AI assistants. Now give AI to your entire SDLC.**
+**Your engineering team has AI assistants. Now give Agentic AI to your entire SDLC.**
 
-Most teams use AI for isolated tasks — a code completion here, a ticket summary there. The **Agentic Agent Garage** is something different: a coordinated fleet of **69 specialized AI agents across 17 SDLC phases**, orchestrated end-to-end from the first business idea to post-production incident response.
+Most teams use AI for isolated tasks — a code completion here, a ticket summary there. The **Agentic Agent Garage** is something different: a coordinated fleet of **69 specialized AI agents with ~180 Skills across 17 SDLC phases**, orchestrated end-to-end from the first business idea to post-production incident response.
 
 A central **SDLC Supervisor** receives any request and routes it to the right phase agent automatically — no configuration, no switching between tools. Each phase agent breaks the work down into focused sub-agents and atomic skills, connected to your existing toolchain via **20+ MCP integrations**: Jira, GitHub, SonarQube, ArgoCD, PagerDuty, and more.
 
