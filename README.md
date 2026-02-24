@@ -6,7 +6,7 @@ This platform is built to support **exploration**, **experimentation** and **dev
 
 This project builds upon the foundation of the **Self-hosted AI Starter Kit**, curated by <https://github.com/n8n-io>, which combines the self-hosted n8n platform with a curated list of compatible AI products and components.
 
-![Open WebUI and n8n](readme_images/open-webui-n8n.png)
+![Open WebUI and n8n](readme_images/Agent_Garage/open-webui-n8n.png)
 
 ## Table of Contents
 
@@ -38,7 +38,7 @@ for any loss or damage resulting from its use.
 
 Use of this project does not imply any affiliation with or endorsement by Accenture.
 
-> [!NOTE] 
+> [!NOTE]
 > **Enterprise Version Available:** While this is a showcase lab environment, an enterprise implementation version has been successfully deployed with one of our clients and has been in production for years. This demonstrates that the concepts behind this solution are enterprise-ready.
 
 ## Key Features
@@ -126,8 +126,7 @@ If you're running Ollama locally on your Mac (not in Docker), you need to modify
 in the n8n service configuration. Update the x-n8n section in your Docker Compose file as follows:
 
 ```yaml
-x-n8n: &service-n8n 
-  # ... other configurations ...
+x-n8n: &service-n8n # ... other configurations ...
   environment:
     # ... other environment variables ...
     - OLLAMA_HOST=host.docker.internal:11434
@@ -203,7 +202,7 @@ The core of Agent Garage is a Docker Compose file, pre-configured with network a
 2. The Registration form will appear.
 3. Enter the requested data. However, these do not have to be valid, as the e-mail address is not checked. You only have to set this up once.
 
-   ![alt text](readme_images/SetUp-n8n.png)
+   ![alt text](readme_images/Agent_Garage/SetUp-n8n.png)
 
 4. The dashboard will be loaded.
 
@@ -211,7 +210,7 @@ The core of Agent Garage is a Docker Compose file, pre-configured with network a
 
 1. Navigate to http://localhost:3000 .The Sign In page will appear:
 
-   ![alt text](readme_images/sign_in_n8n.png)
+   ![alt text](readme_images/Agent_Garage/sign_in_n8n.png)
 
 2. Use the following credentials to sign in:
 
@@ -227,7 +226,7 @@ The core of Agent Garage is a Docker Compose file, pre-configured with network a
 
 When opening the n8n interface, you’ll see an overview of all available workflows .
 
-![alt text](readme_images/n8n-Dashboard.png)
+![alt text](readme_images/Agent_Garage/n8n-Dashboard.png)
 
 There are two main categories of workflows:
 
@@ -275,16 +274,16 @@ For an easy first step, use the **User Story Creator** workflow in **n8n**. This
 
 1. Double click on the User Story Creator workflow
 
-   ![alt text](readme_images/User-Story-Creator-n8n.png)
+   ![alt text](readme_images/Agent_Garage/User-Story-Creator-n8n.png)
 
 2. Take a moment to review the explanations in the workflow and explore AI agents in n8n.
 3. Activate the workflow by clicking the Active Button:
 
-   ![alt text](readme_images/Activated-Workflow.png)
+   ![alt text](readme_images/Agent_Garage/Activated-Workflow.png)
 
 4. In the chat interface of **Open WebUI** , select the **User Story Creator** chat from the list:
 
-   ![alt text](readme_images/User-Story-Creator-Chat.png)
+   ![alt text](readme_images/Agent_Garage/User-Story-Creator-Chat.png)
 
 5. Enter a request (e.g. “Create a user story for a login function”) via the chat interface and start interacting with the User Story Creator!
 
@@ -306,16 +305,16 @@ It consists of several specialized AI agents that work together to solve more co
 
 1. Double click on the **Manager-Agent** workflow
 
-   ![alt text](readme_images/Manager-Agent.png)
+   ![alt text](readme_images/Agent_Garage/Manager-Agent.png)
 
 2. Take a moment to review the explanations in the workflow and explore how the Manager-Agent and the other AI agents interact in **n8n**.
 3. Activate the workflow by clicking the Active Button:
 
-   ![alt text](readme_images/Activated-Manager-Agent.png)
+   ![alt text](readme_images/Agent_Garage/Activated-Manager-Agent.png)
 
 4. In the chat interface of **Open WebUI**, select the chat named **SDLC Agents**:
 
-   ![alt text](readme_images/SDLC-Agents-Chat.png)
+   ![alt text](readme_images/Agent_Garage/SDLC-Agents-Chat.png)
 
 5. Enter a request (e.g. “Analyze this log file and create a bug report”) via the chat interface. The Manager-Agent will automatically coordinate the involved agents and return the result to you.
 
@@ -392,7 +391,6 @@ test-specification/
 #### How It Works
 
 1. **Input**: Send a POST request to the webhook with your project parameters:
-
    - Objectives
    - Project scope
    - Technologies
@@ -402,9 +400,7 @@ test-specification/
 2. **Validation**: The "Complete Request Decider" agent validates input completeness and requests more information if needed
 
 3. **Multi-Stage Processing**: 11 specialized LLM agents work in sequence and parallel:
-
    - **Core Specification Agents**:
-
      - Epic Creator (generates 1-15 epics based on complexity)
      - User Story Creator (detailed stories with acceptance criteria)
      - Data Flow Builder
@@ -505,7 +501,7 @@ Technologies: Node.js, PostgreSQL, NestJS + Prisma
 
 ### 4. Multi-Model Architecture Guide: Technical Architecture Analyzer
 
-![alt text](readme_images/Technical-Architecture-n8n.png)
+![alt text](readme_images/Agent_Garage/Technical-Architecture-n8n.png)
 
 > **Prerequisites:** This workflow requires multiple Ollama models to be configured. See [Using Multiple Models](#using-multiple-models) for configuration instructions before using this workflow.
 
@@ -563,8 +559,7 @@ The workflow produces a complete implementation guide including:
 5. Receive a markdown-formatted implementation guide in the response like this one
 
 ```md
-**Comprehensive Architecture Plan**
-=====================================
+# **Comprehensive Architecture Plan**
 
 ### **Architecture Overview**
 
@@ -572,36 +567,36 @@ This document outlines the technical architecture of our web application, focusi
 
 ### **Tech Stack Recommendations**
 
-*   Frontend:
-    *   Angular (TypeScript-based framework for building dynamic SPAs)
-    *   TypeScript
-    *   RxJS
-    *   Dependency injection
-*   Backend:
-    *   Spring Boot (Java-based framework for building RESTful APIs and handling business logic)
-    *   JPA (Java Persistence API) with Hibernate implementation
-    *   PostgreSQL (open-source relational database management system)
-*   Database:
-    *   Postgres (relational database with advanced features like JSON support and full-text search)
-*   Protocols/Standards:
-    *   REST (industry-standard architectural style for API design)
-    *   JSON (default data format for API responses)
-    *   SQL (underlying query language used by PostgreSQL)
+- Frontend:
+  - Angular (TypeScript-based framework for building dynamic SPAs)
+  - TypeScript
+  - RxJS
+  - Dependency injection
+- Backend:
+  - Spring Boot (Java-based framework for building RESTful APIs and handling business logic)
+  - JPA (Java Persistence API) with Hibernate implementation
+  - PostgreSQL (open-source relational database management system)
+- Database:
+  - Postgres (relational database with advanced features like JSON support and full-text search)
+- Protocols/Standards:
+  - REST (industry-standard architectural style for API design)
+  - JSON (default data format for API responses)
+  - SQL (underlying query language used by PostgreSQL)
 
 ### **Data Model**
 
 The system has the following entities:
 
-| Entity | Description | Key Attributes |
-| --- | --- | --- |
-| User | Represents a user in the system | id, name, email, password |
-| Product | Represents a product in the system | id, name, description, price |
-| Order | Represents an order placed by a user | id, userId, productId, orderDate |
+| Entity  | Description                          | Key Attributes                   |
+| ------- | ------------------------------------ | -------------------------------- |
+| User    | Represents a user in the system      | id, name, email, password        |
+| Product | Represents a product in the system   | id, name, description, price     |
+| Order   | Represents an order placed by a user | id, userId, productId, orderDate |
 
 The relationships between these entities are:
 
-*   One-to-many: User -> Order (one user can have multiple orders)
-*   Many-to-one: Product -> Order (multiple products can be part of one order)
+- One-to-many: User -> Order (one user can have multiple orders)
+- Many-to-one: Product -> Order (multiple products can be part of one order)
 
 ### **Local Setup**
 
@@ -617,9 +612,9 @@ To set up the development environment locally, follow these steps:
 
 To ensure security, consider the following best practices:
 
-*   Implement authentication and authorization mechanisms using OAuth 2.0 or JWT tokens.
-*   Use secure credentials for database connections (e.g., secret management via HashiCorp Vault or AWS Secrets Manager).
-*   Validate user input to prevent SQL injection attacks.
+- Implement authentication and authorization mechanisms using OAuth 2.0 or JWT tokens.
+- Use secure credentials for database connections (e.g., secret management via HashiCorp Vault or AWS Secrets Manager).
+- Validate user input to prevent SQL injection attacks.
 
 ### **Deployment Steps**
 
@@ -630,8 +625,7 @@ To deploy the system, follow these steps:
 3.  Set up a load balancer (e.g., Nginx) to distribute incoming traffic across multiple instances of the backend application.
 4.  Configure the database connection and ensure it is properly secured.
 
-**Example Use Cases**
---------------------
+## **Example Use Cases**
 
 ### **User Registration**
 
@@ -645,12 +639,11 @@ To deploy the system, follow these steps:
 2.  The Angular application sends a `POST` request to the Spring Boot backend API (`/api/orders`) with the selected product IDs.
 3.  The Spring Boot application processes the request, creates a new order in the database, and returns an order ID response to the client.
 
-**Best Practices**
-------------------
+## **Best Practices**
 
-*   Follow standard professional guidelines for code organization, naming conventions, and documentation.
-*   Use version control systems like Git to track changes and collaborate with team members.
-*   Implement continuous integration and continuous deployment (CI/CD) pipelines to automate testing, building, and deployment of the system.
+- Follow standard professional guidelines for code organization, naming conventions, and documentation.
+- Use version control systems like Git to track changes and collaborate with team members.
+- Implement continuous integration and continuous deployment (CI/CD) pipelines to automate testing, building, and deployment of the system.
 
 By following this comprehensive architecture plan, you can build a scalable, maintainable, and secure web application that meets the needs of your users.
 ```
@@ -684,7 +677,7 @@ By following this comprehensive architecture plan, you can build a scalable, mai
 
 - **Visual Model Requirements**: Requires a visual-capable LLM (qwen3-vl:8b or similar) for accurate diagram interpretation
 - **Performance**: The overall performance on running this local-only might be poor in terms of response times. Consider choosing a more potent model than llama3.2:3b
-. **State of the art**: It might be that you are recommended to Use Angullar 13 or Java 11. The goal is to showcase the flow, not the actuality of it `:)`
+  . **State of the art**: It might be that you are recommended to Use Angullar 13 or Java 11. The goal is to showcase the flow, not the actuality of it `:)`
 
 ## 💡 Notes
 
@@ -695,6 +688,7 @@ The Llama 3.2 model is installed by default. You can easily configure different 
 #### Quick Start: Change the Primary Model
 
 1. Edit the `.env` file:
+
    ```bash
    OLLAMA_MODEL=mixtral
    ```
@@ -724,6 +718,7 @@ in pre-release versions, which are not tagged as `:latest` in Docker Hub and thu
 Available models: [Ollama Library](https://ollama.com/library)
 
 **Note**: Model changes in n8n workflows must be done manually via the n8n UI:
+
 1. Open the workflow in n8n
 2. Click on the "Ollama Chat Model" node
 3. Change the model field (e.g., from "llama3.2:latest" to "mixtral:latest")
@@ -741,20 +736,20 @@ If the log file is replaced or renamed, make sure to update the corresponding pa
 
 3. Select Database Type PostgreSQL and fill in the required fields. Default values are provided in the `.env` file.
 
-![alt text](readme_images/Jira-Database-Setup.png)
+![alt text](readme_images/Agent_Garage/Jira-Database-Setup.png)
 
 4. The application properties can be adopted by default.
 
-![alt text](readme_images/Jira-Application-Properties.png)
+![alt text](readme_images/Agent_Garage/Jira-Application-Properties.png)
 
 5. The next step is to generate a Server ID, which is required to use Jira. In addition, a Jira license must be available to which the Server ID is linked. If the license is not available, click on the “Generate a new trial license” for jira Software (Data Center) with the link below.
 
-![alt text](readme_images/Jira-License-Key.png)
+![alt text](readme_images/Agent_Garage/Jira-License-Key.png)
 
 6. Now, Jira can be configured and projects can be set up. Note that only “tasks” exist as issue types in the jira version. The issue types "Story" and "Bug" must first be configured.
-Click on Settings at the top right of your profile, select Issues from the menu and configure the issue types Story and Bug as shown in the image.
+   Click on Settings at the top right of your profile, select Issues from the menu and configure the issue types Story and Bug as shown in the image.
 
-![alt text](readme_images/Jira_issue_types.png)
+![alt text](readme_images/Agent_Garage/Jira_issue_types.png)
 
 7. In order to link Jira with the n8n workflows, adapt the `.env` file.
 
@@ -797,7 +792,6 @@ The platform leverages containerization technology, where each component runs in
 1. **User Input**: Users interact with the platform through OpenWebUI's chat interface, submitting requests for AI agent processing
 
 2. **n8n-Pipe Function**: OpenWebUI uses a custom Python function called "n8n-pipe" to bridge communication with n8n:
-
    - Intercepts user messages instead of sending them directly to an AI model
    - Forwards requests to n8n workflows via webhooks
    - Maintains session management for continuous conversations
@@ -805,7 +799,6 @@ The platform leverages containerization technology, where each component runs in
 3. **Webhook Trigger**: n8n receives the message through a webhook endpoint, which triggers the appropriate workflow containing the MAS implementation
 
 4. **Agent Processing**: Within n8n workflows:
-
    - AI agents access Large Language Models (LLMs) through Ollama
    - Agents can interact with external systems (e.g., Jira) via MCP clients
    - Multiple specialized agents collaborate to process the request
@@ -864,7 +857,6 @@ The n8n-MCP Server gives AI assistants comprehensive access to n8n node document
    ```
 
 2. **Configure in your AI development environment:**
-
    - Add the MCP server to your Claude/Cursor/Windsurf configuration
    - Start a new chat and describe your desired workflow
 
