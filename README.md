@@ -1,28 +1,23 @@
-# Agent Garage: A GenAI Reference Architecture
+# Agentic Agent Garage
 
-**Agent Garage** is an open-source project aimed at building a reference architecture for a generative AI (GenAI) platform using open-source software. It is designed to serve as a starting point for creating agentic AI workflows and exploring modular, self-hosted AI solutions.
+**Your engineering team has AI assistants. Now give AI to your entire SDLC.**
 
-This platform is built to support **exploration**, **experimentation** and **development** with AI agents. It offers a practical environment for any user who wants to understand how intelligent AI-agents can be used to automate tasks, solve problems, or implement custom workflows. Whether you want to try out existing agents, adapt them to your needs, or build entirely new solutions, the agent garage provides a flexible and accessible starting point.
+Most teams use AI for isolated tasks — a code completion here, a ticket summary there. The **Agentic Agent Garage** is something different: a coordinated fleet of **69 specialized AI agents across 17 SDLC phases**, orchestrated end-to-end from the first business idea to post-production incident response.
 
-This project builds upon the foundation of the **Self-hosted AI Starter Kit**, curated by <https://github.com/n8n-io>, which combines the self-hosted n8n platform with a curated list of compatible AI products and components.
+A central **SDLC Supervisor** receives any request and routes it to the right phase agent automatically — no configuration, no switching between tools. Each phase agent breaks the work down into focused sub-agents and atomic skills, connected to your existing toolchain via **20+ MCP integrations**: Jira, GitHub, SonarQube, ArgoCD, PagerDuty, and more.
 
-![Open WebUI and n8n](readme_images/Agent_Garage/open-webui-n8n.png)
+**Two ways to use it:**
 
-## Table of Contents
+- 💬 **Chat-driven** via Open WebUI — talk to the SDLC Supervisor or any phase agent directly; it handles the orchestration for you
+- ⚡ **As a Claude Code marketplace** — install SDLC phase plugins and use 180 atomic skills as slash commands directly in your IDE: `/fix-bug`, `/generate-test-suite`, `/deployment-plan`
 
-- [Key Features](#key-features)
-- [Tech Stack](#tech-stack)
-- [Installation](#installation)
-- [Getting Started with the Agent Garage](#-getting-started-with-the-agent-garage)
-- [Notes](#-notes)
-- [OpenWebUI and n8n Integration Architecture](#-openwebui-and-n8n-integration-architecture)
-- [Chat-based Workflow Creation with n8n-MCP](#-chat-based-workflow-creation-with-n8n-mcp)
-- [Upgrading](#upgrading)
-- [Recommended Reading](#-recommended-reading)
-- [Video Walkthrough](#-video-walkthrough)
-- [More AI Templates](#️-more-ai-templates)
-- [Tips & Tricks](#-tips--tricks)
-- [License](#-license)
+Self-hosted. Open source. Docker-deployable in minutes. Built on n8n, Ollama, and Open WebUI — with enterprise-ready patterns proven in production at scale.
+
+![SDLC Supervisor in Open WebUI](readme_images/Agentic_Agent_Garage/openwebui_chat_models.png)
+
+> This project builds upon the foundation of the **Self-hosted AI Starter Kit**, curated by <https://github.com/n8n-io>, which combines the self-hosted n8n platform with a curated list of compatible AI products and components.
+
+---
 
 ## ⚠️ Disclaimer
 
@@ -41,17 +36,296 @@ Use of this project does not imply any affiliation with or endorsement by Accent
 > [!NOTE]
 > **Enterprise Version Available:** While this is a showcase lab environment, an enterprise implementation version has been successfully deployed with one of our clients and has been in production for years. This demonstrates that the concepts behind this solution are enterprise-ready.
 
+---
+
+## Table of Contents
+
+- [Key Features](#key-features)
+- [The SDLC Plugin System](#the-sdlc-plugin-system)
+  - [Architecture: Three Tiers](#architecture-three-tiers)
+  - [The SDLC Supervisor](#the-sdlc-supervisor)
+  - [SDLC Phases at a Glance](#sdlc-phases-at-a-glance)
+  - [Complete Plugins](#complete-plugins)
+  - [MCP Connectors](#mcp-connectors)
+  - [Automation Hooks](#automation-hooks)
+  - [End-to-End Example Pipeline](#end-to-end-example-pipeline)
+- [Tech Stack](#tech-stack)
+- [Installation](#installation)
+- [Getting Started](#-getting-started)
+- [OpenWebUI and n8n Integration Architecture](#-openwebui-and-n8n-integration-architecture)
+- [Chat-based Workflow Creation with n8n-MCP](#-chat-based-workflow-creation-with-n8n-mcp)
+- [Upgrading](#upgrading)
+- [Recommended Reading](#-recommended-reading)
+- [Video Walkthrough](#-video-walkthrough)
+- [More AI Templates](#️-more-ai-templates)
+- [Tips & Tricks](#-tips--tricks)
+- [License](#-license)
+
+---
+
 ## Key Features
 
-🚗 **Agentic AI:** Build smart, autonomous agents effortlessly.
+🔁 **Full SDLC Coverage:** 69 AI agents across 17 phase modules — from Ideation and Sprint Planning through Development, Testing, Release, and all the way to Incident Response and Compliance.
 
-🧰 **Full-Stack:** Frontend, backend, databases and local LLM covered.
+🎛️ **SDLC Supervisor:** A single entry point that automatically routes any request to the right phase agent. No need to know which agent handles what — just describe the task.
 
-🛠️ **Modular:** Easily customizable, swap tools in and out.
+🧠 **Three-Tier Architecture:** Every phase follows the same pattern — Orchestrators (phase entry), Agents (workflow execution), Skills (atomic operations). Pick the level of abstraction that fits your task.
 
-📖 **Documentation & Demos:** Practical examples and docs to learn and accelerate client showcases.
+🛍️ **Claude Code Marketplace:** SDLC phase plugins are installable as Claude Code skill packages. 180 slash-command skills available directly in your IDE — `/fix-bug`, `/generate-tests`, `/rollback-plan`, and more.
 
-🌐 **Open Source First:** 100% open-source tools, ready for enterprise adoption.
+🔌 **20+ MCP Connectors:** Deep, bidirectional integrations with your enterprise toolchain — Jira, GitHub, SonarQube, ArgoCD, PagerDuty, Prometheus, and more. Agents read from and write to your existing systems.
+
+🪝 **Automation Hooks:** Pre-commit quality gates, pre-push test runs, and post-deploy smoke tests that trigger automatically as part of your normal Git workflow.
+
+🌐 **Open Source & Self-Hosted:** 100% open-source toolchain (n8n, Open WebUI, Ollama), deployable via Docker Compose, and ready for enterprise adaptation.
+
+---
+
+## The SDLC Plugin System
+
+The heart of the Agentic Agent Garage is the **SDLC Plugin System** — a collection of 17 phase modules covering the complete software development lifecycle, organized in a three-tier architecture of Orchestrators, Agents, and Skills.
+
+### Architecture: Three Tiers
+
+Every SDLC phase follows the same hierarchical structure:
+
+```
+Orchestrator
+└── Agents
+      └── Skills
+```
+
+| Tier             | What it does                                                                                                                                         | When to use it                                                                   |
+| ---------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- |
+| **Orchestrator** | Entry point for a full phase. Conducts a dialogue with the user, clarifies context, and delegates to the right agent. Does not execute tasks itself. | When you want to work through a full phase and let the system decide what to do. |
+| **Agent**        | Specialized workflow for a concrete task type within a phase. Combines multiple skills into a coherent flow and makes its own decisions.             | When you know the type of task but want the agent to handle the steps.           |
+| **Skill**        | An atomic single capability — exactly one thing, with a defined input and output. Callable directly as a slash command.                              | When you know exactly what you need — fast, direct, no overhead.                 |
+
+**Example — Phase 3.1 Development:**
+
+```
+/development-orchestrator                    ← Orchestrator
+├── /development-code-generator-agent        ← Agent
+│     ├── /development-code-from-requirements
+│     ├── /development-generate-tests
+│     └── /development-generate-docs
+├── /development-code-reviewer-agent         ← Agent
+│     ├── /development-review-pr
+│     ├── /development-security-scan
+│     └── /development-code-quality
+├── /development-code-transformer-agent      ← Agent
+│     ├── /development-refactor
+│     ├── /development-migrate-code
+│     └── /development-optimize-performance
+└── /development-code-dev-assistant-agent    ← Agent
+      ├── /development-debug-assist
+      ├── /development-fix-bug
+      └── /development-pair-program
+```
+
+Each phase folder follows the same file structure:
+
+```
+sdlc-plugins/{phase}/
+├── orchestrator.md               ← Orchestrator definition
+├── agents/
+│   └── agent-*.md                ← Agent definitions
+├── skills/
+│   └── {skill-name}/SKILL.md     ← Skill definitions
+├── commands/
+│   └── {phase}-{skill}.md        ← Slash command wrappers
+└── marketplace-metadata.json
+```
+
+---
+
+### The SDLC Supervisor
+
+The **SDLC Supervisor** is the central intelligence layer that ties all phase agents together. It receives any user request, determines which SDLC phase is relevant, and routes the request to the appropriate Phase Orchestrator — automatically.
+
+![SDLC Supervisor n8n Workflow](readme_images/Agentic_Agent_Garage/n8n_sdlc_supervisor.png)
+
+In **Open WebUI**, the SDLC Supervisor appears as the top-level model. Users can either start there for fully automatic routing, or address a specific phase model directly.
+
+In **n8n**, the Supervisor is the master workflow that fans out to all 17+ Phase Orchestrator Agent workflows. Each Phase Orchestrator can also be triggered directly via webhook — bypassing the Supervisor when a specific phase is known.
+
+![n8n Workflows — SDLC Supervisor selected](readme_images/Agentic_Agent_Garage/n8n_workflows_selected.png)
+
+---
+
+### SDLC Phases at a Glance
+
+The system covers **17 phase modules** across 6 classic SDLC stages, with **69 agents** and **180 skills**:
+
+| Phase                  | Module                       | Plugin                   | Agents | Skills | MCP Connectors                  |
+| ---------------------- | ---------------------------- | ------------------------ | ------ | ------ | ------------------------------- |
+| **1 — Planning**       | 1.1 Ideation & Discovery     | `idea-scout`             | 4      | 8      | —                               |
+|                        | 1.2 Business Alignment       | `strategy-navigator`     | 4      | 8      | Jira, Confluence                |
+|                        | 1.3 Requirements Engineering | `requirements-engineer`  | 4      | 16     | Jira, Confluence                |
+|                        | 1.4 Sprint Planning          | `sprint-architect`       | 4      | 8      | Jira, GitHub                    |
+| **2 — Design**         | 2 Architecture & Design      | `solution-architect`     | 4      | 10     | Confluence                      |
+| **3 — Implementation** | 3.1 Development              | `code-companion`         | 4      | 17     | SonarQube, Snyk                 |
+|                        | 3.2 Code Review & QA         | `review-guardian`        | 4      | 8      | GitHub, SonarQube               |
+|                        | 3.3 CI Pipeline              | `pipeline-engineer`      | 4      | 8      | GitHub Actions, Terraform       |
+| **4 — Testing**        | 4 Testing & QA               | `test-commander`         | 5      | 19     | TestRail, Codecov, k6           |
+| **5 — Deployment**     | 5.1 Release Management       | `release-pilot`          | 4      | 15     | GitHub, ArgoCD, Kubernetes      |
+|                        | 5.2 Go-Live                  | `launch-commander`       | 4      | 8      | Slack, LaunchDarkly, PagerDuty  |
+| **6 — Operations**     | 6.1 Operations & SRE         | `ops-intelligence`       | 4      | 13     | Prometheus, ELK, PagerDuty      |
+|                        | 6.2 Observability            | `observability-sentinel` | 4      | 8      | Grafana, Elasticsearch, Datadog |
+|                        | 6.3 Feedback Loop            | `insight-collector`      | 4      | 8      | Amplitude, Intercom, Optimizely |
+|                        | 6.4 Compliance & Governance  | `compliance-officer`     | 4      | 8      | Vault, ServiceNow, Confluence   |
+|                        | 6.5 Knowledge Hub            | `knowledge-curator`      | 4      | 8      | Confluence, GitHub              |
+|                        | 6.6 Cross-Cutting            | `platform-guardian`      | 4      | 8      | GitHub, Jira, Confluence        |
+
+**Totals: 69 Agents · 180 Skills · 20+ MCP Connectors**
+
+In Open WebUI, each phase module is exposed as a dedicated model, giving users a direct, phase-specific entry point:
+
+![Open WebUI — SDLC Phase Models](readme_images/Agentic_Agent_Garage/openwebui_models.png)
+
+Each model is backed by a dedicated n8n Orchestrator Agent workflow — 21 workflows in total:
+
+![n8n — All SDLC Workflows](readme_images/Agentic_Agent_Garage/n8n_workflows.png)
+
+---
+
+### Complete Plugins
+
+All 17 phase modules are packaged as installable marketplace plugins with orchestrator, agent, and skill definitions, marketplace metadata, and MCP configuration. The following five are fully implemented end-to-end — the remaining 12 follow the same structure and are progressively reaching the same level of completion.
+
+#### `requirements-engineer` — Phase 1.3 Requirements Engineering
+
+Transforms vague inputs into structured, traceable requirements.
+
+| Agent               | Role                                                                   |
+| ------------------- | ---------------------------------------------------------------------- |
+| `agent-elicitation` | Extracts requirements from Jira, Confluence, and local documents       |
+| `agent-validator`   | Classifies, prioritizes, and detects conflicts                         |
+| `agent-analyzer`    | Traceability matrix, gap analysis, impact reports against the codebase |
+| `agent-transformer` | Requirements → User Stories, SRS documents, Mermaid diagrams           |
+
+**16 Skills:** `classify-requirements` · `detect-conflicts` · `elicit-requirements` · `extract-requirements` · `gap-analysis` · `generate-requirements-document` · `generate-user-stories` · `predict-change-impact` · `prioritize-requirements` · `prototype-from-requirements` · `simulate-stakeholder` · `stakeholder-sentiment` · `trace-requirements` · `validate-requirements` · `visualize-requirements` · `voc-analysis`
+
+**MCP:** Jira · Confluence
+
+---
+
+#### `code-companion` — Phase 3.1 Development
+
+Covers the full inner development loop — from writing code to reviewing it.
+
+| Agent                 | Role                                                               |
+| --------------------- | ------------------------------------------------------------------ |
+| `agent-dev-assistant` | Debugging, bug fixing, pair programming, codebase explanation      |
+| `agent-generator`     | Generates code, tests, docs, and CI/CD pipelines from requirements |
+| `agent-reviewer`      | Read-only code quality and security review via SonarQube and Snyk  |
+| `agent-transformer`   | Refactoring, performance optimization, code migration              |
+
+**17 Skills:** `code-from-requirements` · `code-quality` · `debug-assist` · `explain-codebase` · `fix-bug` · `generate-docs` · `generate-pipeline` · `generate-tests` · `migrate-code` · `optimize-performance` · `pair-program` · `refactor` · `review-pr` · `review-suggest` · `scaffold` · `security-scan` · `translate-code`
+
+**MCP:** SonarQube · Snyk | **Hook:** `pre-commit-quality`
+
+---
+
+#### `test-commander` — Phase 4 Testing & QA
+
+Covers the full test lifecycle — from strategy to specialized execution.
+
+| Agent               | Role                                                              |
+| ------------------- | ----------------------------------------------------------------- |
+| `agent-planning`    | Test strategy, risk-based testing, test impact analysis           |
+| `agent-generation`  | Unit, Integration, E2E, API, and Contract test generation         |
+| `agent-execution`   | Test runs, result analysis, coverage reports, performance testing |
+| `agent-quality`     | Flaky test fixes, mutation testing, self-healing tests            |
+| `agent-specialized` | Visual regression, WCAG accessibility, DAST security testing      |
+
+**19 Skills:** `test-strategy` · `generate-test-plan` · `risk-based-testing` · `test-impact-analysis` · `generate-test-suite` · `generate-api-tests` · `generate-e2e-tests` · `test-data-generator` · `contract-test` · `run-tests` · `analyze-test-results` · `coverage-analysis` · `performance-test` · `fix-flaky-tests` · `mutation-test` · `self-heal-tests` · `visual-regression-test` · `accessibility-test` · `security-test`
+
+**MCP:** TestRail · Codecov · k6 · Playwright | **Hook:** `pre-push-test`
+
+---
+
+#### `release-pilot` — Phase 5.1 Release Management
+
+Orchestrates the full release process from preparation to stakeholder communication.
+
+| Agent                 | Role                                                                    |
+| --------------------- | ----------------------------------------------------------------------- |
+| `agent-preparation`   | CHANGELOG, Release Notes, SemVer versioning, risk assessment            |
+| `agent-product`       | Feature prioritization, OKR management, roadmap generation              |
+| `agent-deployment`    | Deployment plans, rollback strategies, Blue-Green/Canary, Feature Flags |
+| `agent-communication` | Stakeholder updates, GTM checklists, post-release reports               |
+
+**15 Skills:** `changelog` · `release-notes` · `version-bump` · `release-risk-assessment` · `prioritize-features` · `generate-roadmap` · `okr-management` · `lifecycle-assessment` · `deployment-plan` · `rollback-plan` · `deployment-strategy` · `feature-flag-strategy` · `stakeholder-update` · `gtm-checklist` · `post-release-report`
+
+**MCP:** GitHub Releases · ArgoCD · Kubernetes · LaunchDarkly | **Hook:** `post-deploy-smoke-test`
+
+---
+
+#### `ops-intelligence` — Phase 6.1 Operations & SRE
+
+Full ITIL-aligned incident management and proactive reliability engineering.
+
+| Agent                | Role                                                                  |
+| -------------------- | --------------------------------------------------------------------- |
+| `agent-incident`     | ITIL incident response: Detect → Triage → RCA → Resolve → Post-Mortem |
+| `agent-monitoring`   | Anomaly detection, event correlation, auto-remediation                |
+| `agent-optimization` | Trend analysis, capacity forecasting, ITIL CSI improvement plans      |
+| `agent-reliability`  | SLA/SLO tracking, error budget management, change impact assessment   |
+
+**13 Skills:** `classify-incident` · `root-cause-analysis` · `resolve-suggest` · `incident-summary` · `anomaly-detection` · `event-correlate` · `auto-remediate` · `analyze-trends` · `capacity-forecast` · `improvement-plan` · `sla-assessment` · `slo-management` · `change-impact-ops`
+
+**MCP:** Prometheus · ELK · PagerDuty
+
+---
+
+### MCP Connectors
+
+The Agentic Agent Garage integrates with your existing enterprise toolchain through **20+ MCP connectors**:
+
+| Category                       | Tools                                              |
+| ------------------------------ | -------------------------------------------------- |
+| **Project Management**         | Jira · Confluence · ServiceNow                     |
+| **Source Control & CI/CD**     | GitHub · GitHub Actions · Terraform · ArgoCD       |
+| **Code Quality & Security**    | SonarQube · Snyk · HashiCorp Vault                 |
+| **Testing**                    | TestRail · Codecov · k6 · Playwright               |
+| **Deployment**                 | Kubernetes · LaunchDarkly                          |
+| **Communication**              | Slack · PagerDuty                                  |
+| **Monitoring & Observability** | Prometheus · Grafana · ELK/Elasticsearch · Datadog |
+| **Product Analytics**          | Amplitude · Intercom · Optimizely                  |
+
+---
+
+### Automation Hooks
+
+Three lifecycle hooks trigger automatically at key development events:
+
+| Hook                     | Event       | Action                             |
+| ------------------------ | ----------- | ---------------------------------- |
+| `pre-commit-quality`     | Pre-Commit  | Code quality check + security scan |
+| `pre-push-test`          | Pre-Push    | Full test suite execution          |
+| `post-deploy-smoke-test` | Post-Deploy | Smoke tests after every deployment |
+
+---
+
+### End-to-End Example Pipeline
+
+The following shows a complete SDLC run using the Agentic Agent Garage, from first idea to production feedback:
+
+```
+1.  /elicit-requirements + /generate-user-stories     → Phase 1.3
+2.  API Design + ADR generation                        → Phase 2
+3.  /code-from-requirements + /generate-pipeline       → Phase 3.1
+4.  /generate-test-suite + /run-tests                  → Phase 4
+5.  /changelog + /deployment-plan                      → Phase 5.1
+6.  /rollout-manager with Feature Flags                → Phase 5.2
+7.  /anomaly-detection + /slo-management               → Phase 6.1
+8.  /adoption-tracker + /feedback-analyst              → Phase 6.3
+```
+
+At each step, the corresponding phase agent connects to the relevant MCP tools — automatically pushing requirements to Jira, creating PRs on GitHub, publishing ADRs to Confluence, triggering CI/CD pipelines, and feeding SLO data back from Prometheus.
+
+---
 
 ## Tech Stack
 
@@ -64,6 +338,8 @@ Use of this project does not imply any affiliation with or endorsement by Accent
 ✅ [**Qdrant**](https://qdrant.tech/) - Open-source, high-performance vector store with a comprehensive API
 
 ✅ [**PostgreSQL**](https://www.postgresql.org/) - Reliable database system that handles large amounts of data safely
+
+---
 
 ## Installation
 
@@ -102,7 +378,7 @@ docker compose --profile gpu-amd up
 
 #### For Mac / Apple Silicon Users
 
-If you’re using a Mac with an M1 or newer processor, you can't expose your GPU
+If you're using a Mac with an M1 or newer processor, you can't expose your GPU
 to the Docker instance, unfortunately. There are two options in this case:
 
 1. Run the starter kit fully on CPU, like in the section "For everyone else"
@@ -162,7 +438,7 @@ podman compose --profile gpu-amd --file docker-compose.yml up
 
 #### For Mac / Apple Silicon Users
 
-If you’re using a Mac with an M1 or newer processor, you can't expose your GPU
+If you're using a Mac with an M1 or newer processor, you can't expose your GPU
 to the Docker instance, unfortunately. There are two options in this case:
 
 1. Run the multi-container system fully on CPU, like in the section "For Everyone Else (CPU Only)"
@@ -180,21 +456,9 @@ podman compose --file docker-compose.yml up
 podman compose --profile cpu --file docker-compose.yml up
 ```
 
-## 🚀 Getting Started with the Agent Garage
+---
 
-### Key Goals of the Platform
-
-- Use and interact with **preconfigured AI agents**
-
-- Create your **own workflows** using modular components
-
-- Get started quickly thanks to **labeled and guided workflows**
-
-All workflows in n8n are clearly labeled and structured, making it easy to understand their purpose and discover how agents are connected.
-The agent garage encourages to follow, explore, and build on the existing components.
-This makes the platform an ideal starting point for working with agent-based automation, open-ended, guided, and ready for your own ideas.
-
-The core of Agent Garage is a Docker Compose file, pre-configured with network and storage settings, minimizing the need for additional installations. After completing the installation steps above, follow these steps to get started.
+## 🚀 Getting Started
 
 ### n8n
 
@@ -208,7 +472,7 @@ The core of Agent Garage is a Docker Compose file, pre-configured with network a
 
 ### Open WebUI
 
-1. Navigate to http://localhost:3000 .The Sign In page will appear:
+1. Navigate to http://localhost:3000. The Sign In page will appear:
 
    ![alt text](readme_images/Agent_Garage/sign_in_n8n.png)
 
@@ -222,462 +486,106 @@ The core of Agent Garage is a Docker Compose file, pre-configured with network a
 
 **Disclaimer:** Open WebUI is still under active development and is intended for experimentation and testing only. It is not recommended for production use. You may occasionally experience display delays within the Open WebUI interface. In this case, reloading the page or waiting a few seconds will usually solve the problem.
 
-### Further steps
+---
 
-When opening the n8n interface, you’ll see an overview of all available workflows .
+### 1. Start with the SDLC Supervisor
 
-![alt text](readme_images/Agent_Garage/n8n-Dashboard.png)
+The easiest entry point is the **SDLC Supervisor** — the top-level model in Open WebUI. Simply describe what you want to do and the Supervisor will route your request to the right phase agent automatically.
 
-There are two main categories of workflows:
+In Open WebUI, select the **SDLC Supervisor** from the model picker:
 
-🟥 **Simple Entry Workflow**
+![SDLC Supervisor Chat](readme_images/Agentic_Agent_Garage/openwebui_chat_models.png)
 
-The User Story Creator workflow is highlighted with a red border.
+Then describe your task in natural language — for example:
 
-It represents the simplest entry point into the system and is ideal for getting started.
-This workflow is based on a single AI agent and lets you directly try out user story generation.
-We recommend starting with this workflow to explore the basics before diving into the full multi-agent architecture.
+```
+I need to write user stories for a new checkout feature.
+```
 
-🟩 **Multi-Agent System Workflows**
-
-Workflows belonging to the multi-agent system are marked with a green border. The structure follows a clear hierarchy:
-
-- The **Manager-Agent** is labeled with the number **2**.
-
-- The connected sub-agents are numbered 2.1 to 2.4, each handling a specific task (e.g. log analysis, bug reporting, Jira interaction, user story generation).
-
-- These workflows belong together and operate as a collaborative system coordinated by the Manager-Agent.
-
-🟪 **Advanced Automation Workflows**
-
-Advanced workflows demonstrate sophisticated multi-agent orchestration:
-
-- The **Spec-Driven Developer** (labeled 3) is a comprehensive workflow that transforms project ideas into complete specification packages using 11 specialized LLM agents working in sequence and parallel.
-
-🟦 **Multi-Modal / Multi-Model Workflows**
-
-Workflow to demonstrate multi-modal (different forms of information) understanding of a workflow by utilising two different models.
-
-- The **Technical Architecture Analysis** (labeled 4) is a two-step workflow that accepts architecture scatches and diagrams as input (image), understand that content through a visual model, forwards it learnings to a text model to generate an implementation plan for that architecture.
+The Supervisor identifies this as a Phase 1.3 Requirements Engineering task, routes to the `requirements-engineer` plugin, and returns structured user stories — without you having to know which agent or skill handles this.
 
 ---
 
-### 1. Simple Workflow – _User Story Creator_
+### 2. Work with a specific Phase Orchestrator
 
-For an easy first step, use the **User Story Creator** workflow in **n8n**. This workflow is designed to explore the basic functionality and interaction with the chat interface of **Open WebUI**.
+If you already know which phase you're working in, select the corresponding model directly in Open WebUI. Each SDLC phase is available as its own model:
 
-- 🔧 **Technically**, the workflow is based on a single AI-Agent that creates structured User Stories.
+![Open WebUI — Phase Models](readme_images/Agentic_Agent_Garage/openwebui_models.png)
 
-- ✅ **Goal**: Get quick results & understand the platform basics
+For example, selecting **SDLC Phase 3.1 Development** gives you direct access to the `code-companion` plugin. The Phase Orchestrator will ask clarifying questions, then delegate to the appropriate agent within that phase.
 
-### How it works:
+---
 
-1. Double click on the User Story Creator workflow
+### 3. Call a Skill directly
 
-   ![alt text](readme_images/Agent_Garage/User-Story-Creator-n8n.png)
-
-2. Take a moment to review the explanations in the workflow and explore AI agents in n8n.
-3. Activate the workflow by clicking the Active Button:
-
-   ![alt text](readme_images/Agent_Garage/Activated-Workflow.png)
-
-4. In the chat interface of **Open WebUI** , select the **User Story Creator** chat from the list:
-
-   ![alt text](readme_images/Agent_Garage/User-Story-Creator-Chat.png)
-
-5. Enter a request (e.g. “Create a user story for a login function”) via the chat interface and start interacting with the User Story Creator!
-
-This entry point is ideal for getting familiar with the **core concepts** of the platform and testing your own ideas.
-
-### 2. Next Level: Multi-Agent System with Supervisor Architecture
-
-For the next step, use the **Multi-Agent System** workflow in **n8n**. This workflow is designed to demonstrate how multiple specialized AI agents collaborate under a supervisor architecture to handle selected tasks from the software development process.
-It consists of several specialized AI agents that work together to solve more complex tasks related to selected aspects of the software development process.
-
-- 👥 Agents are clearly separated and each focuses on a specific task within the software development process.
-- 🧠 The **Supervisor Architecture** ensures that a central agent (Manager-Agent) coordinates workflows and distributes tasks
-
-- 🔧 **Technically**, the workflow is coordinated by a central **Manager-Agent**, which delegates tasks to other specialized agents ( User-Story-Agent, Logfile-Agent, Bugreport-Agent, Jira-Agent).
-
-- ✅ **Goal**: Understand agent collaboration
-
-### How it works:
-
-1. Double click on the **Manager-Agent** workflow
-
-   ![alt text](readme_images/Agent_Garage/Manager-Agent.png)
-
-2. Take a moment to review the explanations in the workflow and explore how the Manager-Agent and the other AI agents interact in **n8n**.
-3. Activate the workflow by clicking the Active Button:
-
-   ![alt text](readme_images/Agent_Garage/Activated-Manager-Agent.png)
-
-4. In the chat interface of **Open WebUI**, select the chat named **SDLC Agents**:
-
-   ![alt text](readme_images/Agent_Garage/SDLC-Agents-Chat.png)
-
-5. Enter a request (e.g. “Analyze this log file and create a bug report”) via the chat interface. The Manager-Agent will automatically coordinate the involved agents and return the result to you.
-
-### Overview: Specialized Agents in the Multi-Agent System
-
-| Agent Name           | Responsibility                                            | Input / Artifacts                                                          | Output / Artifacts                                                    |
-| -------------------- | --------------------------------------------------------- | -------------------------------------------------------------------------- | --------------------------------------------------------------------- |
-| **Jira-Agent**       | - Creating, searching, and updating tickets               | - Ticket change <br> - Search request for ticket <br> - Ticket description | - Correctly modified data in Jira                                     |
-| **Logfile-Agent**    | - Analysis of logfiles for critical bugs and stack traces | -Logfile                                                                   | - Detailed analysis of bugs (error description, cause of error, etc.) |
-| **Bugreport-Agent**  | - Generating structured bug reports based on analysis     | - Detailed description of a bug                                            | - Bugreport                                                           |
-| **User-Story-Agent** | - Generating structured user stories from requests        | - Idea for software feature                                                | - User story                                                          |
-
-#### Known Limitations
-
-- **Open WebUI Timeout Behaviour**: Open WebUI might run into timeouts on smaller models due to longer processing times. It seems that Open WebUI resends some data, which then results in multiple executions that make less and less sense as they contain partial information and partial chat history too.
-
-### 3. Advanced Workflow: Spec-Driven Developer
-
-The **Spec-Driven Developer** is a comprehensive n8n workflow that transforms high-level project ideas into complete, specification-driven development documentation. This advanced workflow demonstrates the power of multi-agent orchestration for automating complex, multi-stage processes.
-
-- 🏗️ **11 Specialized LLM Agents**: Each agent is highly customized for specific specification tasks
-- 📦 **Complete Documentation Package**: Generates epics, user stories, data flows, OpenAPI specs, project structure, and test specifications
-- 🎯 **Test-Driven Development Ready**: Includes comprehensive test specifications organized by type (unit, integration)
-- 📋 **Jira-Compatible Output**: Exports specifications in Jira-ready format for immediate project management integration
-
-#### What It Generates
-
-The workflow produces a comprehensive specification package including:
-
-- **Epics & User Stories**: Structured breakdown with 1-15 epics and detailed user stories in standard format
-- **Data Flow Documentation**: Complete data architecture, entities, relationships, and flows
-- **OpenAPI Specification**: Production-ready API definitions (OpenAPI 3.1.0)
-- **Project Structure**: Detailed file and directory organization optimized for your tech stack
-- **Test Specifications**: Complete test suite organized by type:
-  - **Unit Tests**: Component-level tests for services, validators, and UI components
-  - **Integration Tests**: API endpoint and database integration scenarios
-  - **Test Data**: Fixtures and sample data
-- **CLAUDE.md**: AI-friendly specification file for seamless handoff to development agents
-
-#### Output Structure
-
-The workflow creates a `specification.tar.gz` file (located in `agent-garage/shared/`) containing:
+For precise, single-purpose tasks, use Skills as slash commands in Claude Code — no orchestrator overhead, no dialogue:
 
 ```
-example-app-folder/
-└── [proposed architecture folders & files]
-
-jira-specification/
-├── CLAUDE.md                               # AI-friendly specification
-├── data-flow.md                            # Data architecture
-├── openAPI.yaml                            # API specification
-├── app-file-structure.md                   # Project directory structure
-├── epic-1-[title]/
-│   ├── epic1-summary.md
-│   ├── us-1.1-[title].md
-│   └── us-1.2-[title].md
-└── epic-2-[title]/
-    ├── epic2-summary.md
-    ├── us-2.1-[title].md
-    └── us-2.2-[title].md
-
-test-specification/
-├── unit-tests/
-│   ├── backend-service-tests.md
-│   ├── backend-validation-tests.md
-│   └── frontend-component-tests.md
-├── integration-tests/
-│   ├── api-endpoint-tests.md
-│   └── database-integration-tests.md
-└── test-data/
-    └── fixtures.md
+/fix-bug
+/generate-test-suite
+/changelog
+/anomaly-detection
 ```
 
-#### How It Works
+Skills are atomic: they take a defined input, execute exactly one thing, and return a defined output. All 180 skills are available as slash commands.
 
-1. **Input**: Send a POST request to the webhook with your project parameters:
-   - Objectives
-   - Project scope
-   - Technologies
-   - Functional requirements
-   - Success criteria
+---
 
-2. **Validation**: The "Complete Request Decider" agent validates input completeness and requests more information if needed
+### 4. Explore the n8n Workflows
 
-3. **Multi-Stage Processing**: 11 specialized LLM agents work in sequence and parallel:
-   - **Core Specification Agents**:
-     - Epic Creator (generates 1-15 epics based on complexity)
-     - User Story Creator (detailed stories with acceptance criteria)
-     - Data Flow Builder
-     - OpenAPI Builder (OpenAPI 3.1.0)
-     - Project Structure Builder
-     - File Command Builder
-     - Jira Structure Builder
-     - Jira Specification Command Builder
+Each Phase Orchestrator is a dedicated n8n workflow. Open n8n at http://localhost:5678 to inspect, customize, or extend any of the 21 workflows:
 
-   - **Test Specification Agents**:
-     - Test Specification Builder (comprehensive test cases by type)
-     - Test Specification Command Builder (test folder structure)
+- **SDLC-Supervisor** — the master routing workflow
+- **Phase Orchestrator Agents** — one workflow per SDLC phase (19 total)
+- **Load-Skill** — a utility workflow for dynamic skill loading
 
-4. **Output**: Receive a webhook response with summary statistics and a downloadable tarball
+Each Orchestrator Agent workflow follows the same pattern:
 
-#### Example Response
+![Ideation Orchestrator Agent in n8n](readme_images/Agentic_Agent_Garage/n8n_ideation_orchestrator.png)
 
-```json
-{
-    "status": "200",
-    "message": "Ran successfully:
-                - There is a tar-file ready for you to download in the shared
-                  folder of the docker container.
-                - The following is a summary of what has been done.
+- **Trigger via Webhook** — called directly from Open WebUI
+- **Trigger from Supervisor** — called internally by the SDLC Supervisor
+- **Agent node** — connected to a language model, conversation memory, and the `load_skill` tool
+- **Response via Webhook** — returns the result to Open WebUI
 
-Summary:
-- 9 Epics created
-- 27 User stories created
-- Data flow md created
-- openAPI.yaml created
-- App file structure md created
-- Test specifications created (unit, integration, e2e)
-- specification.tar.gz created and ready for download
+---
 
-Have fun with your spec!"
-}
-```
+### 5. Setting up Jira
 
-#### Usage
+1. Navigate to http://localhost:8080
+2. The Jira setup page will appear.
+3. Select Database Type PostgreSQL and fill in the required fields. Default values are provided in the `.env` file.
 
-1. Navigate to the **Spec-Driven Developer** workflow in n8n
-2. Review the workflow configuration and agent setup
-3. Activate the workflow
-4. Send a POST request to the webhook endpoint with your project description
-5. Download the generated `specification.tar.gz` from `agent-garage/shared/`
+   ![alt text](readme_images/Agent_Garage/Jira-Database-Setup.png)
 
-#### Example Input
+4. The application properties can be adopted by default.
 
-```markdown
-# Build a Minimal Model Context Protocol (MCP) Server
+   ![alt text](readme_images/Agent_Garage/Jira-Application-Properties.png)
 
-🎯 Objective
-Develop a MCP-compatible service in Node.js that allows an AI agent
-to interact with a Task Management database.
+5. Generate a Server ID and link it to a Jira license. If no license is available, click "Generate a new trial license" for Jira Software (Data Center).
 
-🧩 Architecture
-[ AI Agent ] ⇅ [ Custom MCP Server (Node.js) ] ⇅ [ PostgreSQL DB ]
+   ![alt text](readme_images/Agent_Garage/Jira-License-Key.png)
 
-📦 Project Scope
-Technologies: Node.js, PostgreSQL, NestJS + Prisma
+6. Configure issue types: Click on Settings → Issues and add "Story" and "Bug" as issue types.
 
-🔧 Functional Requirements
+   ![alt text](readme_images/Agent_Garage/Jira_issue_types.png)
 
-- GET /mcp/schema/tasks - Returns database schema as JSON-Schema
-- POST /mcp/tasks - Accepts JSON array of Task objects
-- GET /mcp/tasks/summary - Returns task statistics
+7. Adapt the `.env` file with your Jira connection details.
 
-✅ Success Criteria
+#### Create and configure personal access tokens
 
-1. MCP Server running and accessible
-2. Schema inspection works
-3. AI agent can insert 1000 task records
-4. Summary reflects inserted data
-```
+1. Log in and open Settings.
+2. Select Personal Access Tokens in the left sidebar.
+3. Click "Create new token".
+4. Copy the generated token and paste it into the `.env` file:
 
-#### Key Features
-
-- **Intelligent Complexity Analysis**: Automatically determines appropriate number of epics (1-15) based on project complexity
-- **Sprint-Ready Output**: User stories follow standard format with acceptance criteria
-- **Full Traceability**: Each test references related User Story (US-X.Y) for requirement tracking
-- **Test-Driven Development**: Developers can start with TDD approach from day one
-- **QA-Ready**: QA team can review test scenarios in parallel with development
-- **Absolute Mode Agents**: All agents configured for direct, no-filler responses
-- **Time Savings**: Estimated 1800 seconds of manual effort saved per execution
-
-#### Known Limitations
-
-- **n8n Timeout Behavior**: n8n may occasionally throw timeouts on random LLM calls due to the high number of agent nodes
-- **Response Delay**: Sometimes of unknown reasons, an n8n Agent Nodes takes up to 30 seconds to accept LLM API responses.
-- **LLM Model Requirements**: Requires competent LLM (20B+ parameters recommended) for reliable command execution. With smaller models (~20B), expect ~90% success rate - simply retrigger if needed
-
-#### Technical Configuration
-
-- **Execution Order**: v1 (sequential processing)
-- **Caller Policy**: workflowsFromSameOwner
-- **LLM Agents**: 11 specialized agents with custom system and user messages
-- **Output Format**: Tarball containing organized markdown and YAML files
-
-### 4. Multi-Model Architecture Guide: Technical Architecture Analyzer
-
-![alt text](readme_images/Agent_Garage/Technical-Architecture-n8n.png)
-
-> **Prerequisites:** This workflow requires multiple Ollama models to be configured. See [Using Multiple Models](#using-multiple-models) for configuration instructions before using this workflow.
-
-The **Technical Architecture Analyzer** is an advanced n8n workflow that transforms hand-drawn sketches or technical architecture diagrams into comprehensive implementation plans. This workflow demonstrates the power of multi-model orchestration by combining visual and text-based LLMs to understand and document complex system architectures.
-
-- 🎨 **Multi-Model Approach**: Leverages both visual LLM (for image understanding) and text LLM (for detailed planning)
-- 📸 **Visual Input Processing**: Accepts architecture diagrams, sketches, or screenshots as input
-- 📋 **Structured Documentation**: Generates comprehensive markdown documentation with 6 key sections
-- 🏗️ **Implementation-Ready**: Provides actionable steps for local setup, deployment, and security
-
-#### What It Generates
-
-The workflow produces a complete implementation guide including:
-
-- **Architecture Overview**: High-level explanation of the system design and component interactions
-- **Tech Stack Recommendations**: Specific technologies, frameworks, and tools for each component
-- **Data Model**: Entity definitions, relationships, and key attributes (when applicable)
-- **Local Setup**: Step-by-step instructions for setting up the development environment
-- **Security Considerations**: Security concerns and best practices specific to the architecture
-- **Deployment Steps**: Deployment strategy with actionable implementation instructions
-
-#### How It Works
-
-1. **Visual Analysis Phase**:
-   - The first AI agent (using Ollama's visual model `qwen3-vl:8b`) analyzes the uploaded architecture diagram
-   - Identifies all components, services, connections, and data flows
-   - Recognizes architecture patterns (microservices, monolith, serverless, etc.)
-   - Outputs a comprehensive textual description of the architecture
-
-2. **Implementation Planning Phase**:
-   - The second AI agent (using Ollama `llama3.2`) receives the architecture understanding
-   - Generates a structured implementation plan with specific recommendations
-   - Creates markdown-formatted output organized into 6 sections
-   - Provides practical, real-world advice based on industry best practices
-
-3. **Response Delivery**:
-   - Returns the complete implementation guide as markdown
-   - Ready to be used as project documentation or shared with development teams
-
-#### Usage
-
-1. Navigate to the **Technical Architecture Analysis** workflow in n8n
-2. Review the workflow configuration and two-stage agent setup
-3. Activate the workflow
-4. Send a POST request to the webhook endpoint with your architecture diagram (from the repository root):
-
-   ```bash
-   curl -X POST \
-     http://localhost:5678/webhook/architecture-analysis \
-     -F "image=@application-arch.png"
+   ```
+   JIRA_PERSONAL_TOKEN=your_token
+   JIRA_USERNAME=your_username
+   JIRA_PROJECT=project_key
    ```
 
-   **Note:** Run this command from the root directory of the agent-garage repository where `application-arch.png` is located.
-
-5. Receive a markdown-formatted implementation guide in the response like this one
-
-```md
-# **Comprehensive Architecture Plan**
-
-### **Architecture Overview**
-
-This document outlines the technical architecture of our web application, focusing on the key components, data flow, and communication patterns. The system is built using a monolithic architecture with a clear separation of responsibilities between the frontend (Angular), backend (Spring Boot), and database (Postgres).
-
-### **Tech Stack Recommendations**
-
-- Frontend:
-  - Angular (TypeScript-based framework for building dynamic SPAs)
-  - TypeScript
-  - RxJS
-  - Dependency injection
-- Backend:
-  - Spring Boot (Java-based framework for building RESTful APIs and handling business logic)
-  - JPA (Java Persistence API) with Hibernate implementation
-  - PostgreSQL (open-source relational database management system)
-- Database:
-  - Postgres (relational database with advanced features like JSON support and full-text search)
-- Protocols/Standards:
-  - REST (industry-standard architectural style for API design)
-  - JSON (default data format for API responses)
-  - SQL (underlying query language used by PostgreSQL)
-
-### **Data Model**
-
-The system has the following entities:
-
-| Entity  | Description                          | Key Attributes                   |
-| ------- | ------------------------------------ | -------------------------------- |
-| User    | Represents a user in the system      | id, name, email, password        |
-| Product | Represents a product in the system   | id, name, description, price     |
-| Order   | Represents an order placed by a user | id, userId, productId, orderDate |
-
-The relationships between these entities are:
-
-- One-to-many: User -> Order (one user can have multiple orders)
-- Many-to-one: Product -> Order (multiple products can be part of one order)
-
-### **Local Setup**
-
-To set up the development environment locally, follow these steps:
-
-1.  Install Node.js and npm (the package manager for Node.js) on your system.
-2.  Create a new Angular project using `ng new my-app` (replace "my-app" with your desired app name).
-3.  Set up Spring Boot by creating a new Spring Boot project using `spring init --type=web` (replace "web" with the type you want to create).
-4.  Configure the database connection in both Angular and Spring Boot.
-5.  Install the required dependencies for Postgres.
-
-### **Security Considerations**
-
-To ensure security, consider the following best practices:
-
-- Implement authentication and authorization mechanisms using OAuth 2.0 or JWT tokens.
-- Use secure credentials for database connections (e.g., secret management via HashiCorp Vault or AWS Secrets Manager).
-- Validate user input to prevent SQL injection attacks.
-
-### **Deployment Steps**
-
-To deploy the system, follow these steps:
-
-1.  Build and package both Angular and Spring Boot applications using their respective build tools.
-2.  Use a containerization strategy (e.g., Docker) to deploy the backend application.
-3.  Set up a load balancer (e.g., Nginx) to distribute incoming traffic across multiple instances of the backend application.
-4.  Configure the database connection and ensure it is properly secured.
-
-## **Example Use Cases**
-
-### **User Registration**
-
-1.  The user interacts with the Angular frontend (e.g., submits a registration form).
-2.  The Angular application sends a `POST` request to the Spring Boot backend API (`/api/users`) with the user's registration information.
-3.  The Spring Boot application processes the request, creates a new user in the database, and returns a success response to the client.
-
-### **Order Placement**
-
-1.  The user interacts with the Angular frontend (e.g., selects products to add to their cart).
-2.  The Angular application sends a `POST` request to the Spring Boot backend API (`/api/orders`) with the selected product IDs.
-3.  The Spring Boot application processes the request, creates a new order in the database, and returns an order ID response to the client.
-
-## **Best Practices**
-
-- Follow standard professional guidelines for code organization, naming conventions, and documentation.
-- Use version control systems like Git to track changes and collaborate with team members.
-- Implement continuous integration and continuous deployment (CI/CD) pipelines to automate testing, building, and deployment of the system.
-
-By following this comprehensive architecture plan, you can build a scalable, maintainable, and secure web application that meets the needs of your users.
-```
-
-#### Example Use Cases
-
-- **Whiteboard Sessions**: Upload photos of whiteboard architecture sketches from planning sessions
-- **Legacy System Documentation**: Generate documentation for undocumented systems from architecture diagrams
-- **Client Presentations**: Transform client architecture proposals into detailed implementation plans
-- **Architecture Reviews**: Get structured analysis of proposed system designs
-- **Technical Onboarding**: Create comprehensive guides for new team members
-
-#### Key Features
-
-- **Two-Stage Processing**: Separates visual understanding from technical planning for better results
-- **Model Specialization**: Uses visual-capable model for image analysis, text model for planning
-- **Memory Context**: Each agent maintains conversation context through buffer memory
-- **Markdown Output**: Professional, well-structured documentation ready for immediate use
-- **Error Handling**: Configured with proper webhook response handling for reliability
-
-#### Technical Configuration
-
-- **Execution Order**: v1 (sequential processing)
-- **Visual Model**: Ollama qwen3-vl:8b (optimized for diagram understanding)
-- **Text Model**: Ollama llama3.2 (optimized for detailed planning)
-- **Memory**: Separate buffer windows for each agent stage
-- **Output Format**: Markdown with proper headers, lists, and code blocks
-- **Webhook Path**: `/architecture-analysis`
-
-#### Known Limitations
-
-- **Visual Model Requirements**: Requires a visual-capable LLM (qwen3-vl:8b or similar) for accurate diagram interpretation
-- **Performance**: The overall performance on running this local-only might be poor in terms of response times. Consider choosing a more potent model than llama3.2:3b
-  . **State of the art**: It might be that you are recommended to Use Angullar 13 or Java 11. The goal is to showcase the flow, not the actuality of it `:)`
+---
 
 ## 💡 Notes
 
@@ -724,56 +632,7 @@ Available models: [Ollama Library](https://ollama.com/library)
 3. Change the model field (e.g., from "llama3.2:latest" to "mixtral:latest")
 4. Save the workflow
 
-### Change logfile
-
-The **Logfile Agent** has access to a specific log file (`test.log`) located within the project folder.  
-If the log file is replaced or renamed, make sure to update the corresponding path and filename in the **n8n workflow** of the Logfile Agent to ensure correct analysis.
-
-### Setting up Jira to use the Jira-Agent
-
-1. Navigate to http://localhost:8080
-2. The Jira-Setup page will be visible
-
-3. Select Database Type PostgreSQL and fill in the required fields. Default values are provided in the `.env` file.
-
-![alt text](readme_images/Agent_Garage/Jira-Database-Setup.png)
-
-4. The application properties can be adopted by default.
-
-![alt text](readme_images/Agent_Garage/Jira-Application-Properties.png)
-
-5. The next step is to generate a Server ID, which is required to use Jira. In addition, a Jira license must be available to which the Server ID is linked. If the license is not available, click on the “Generate a new trial license” for jira Software (Data Center) with the link below.
-
-![alt text](readme_images/Agent_Garage/Jira-License-Key.png)
-
-6. Now, Jira can be configured and projects can be set up. Note that only “tasks” exist as issue types in the jira version. The issue types "Story" and "Bug" must first be configured.
-   Click on Settings at the top right of your profile, select Issues from the menu and configure the issue types Story and Bug as shown in the image.
-
-![alt text](readme_images/Agent_Garage/Jira_issue_types.png)
-
-7. In order to link Jira with the n8n workflows, adapt the `.env` file.
-
-### Create and configure personal access tokens
-
-1. Log in to your profile and open Settings.
-
-2. Select Personal Access Tokens in the left sidebar.
-
-3. Click on Create new token to create a token.
-
-4. Copy the generated token and paste it into the `.env` file:
-
-   JIRA_PERSONAL_TOKEN=your_token
-
-### Create project and store metadata
-
-1. Create a new repository or project in your GitHub organization or user account.
-
-2. Enter the following information in the .env file:
-
-   JIRA_USERNAME=your_username
-
-   JIRA_PROJECT=project_key
+---
 
 ## 🔗 OpenWebUI and n8n Integration Architecture
 
@@ -789,28 +648,28 @@ The platform leverages containerization technology, where each component runs in
 
 #### Communication Flow
 
-1. **User Input**: Users interact with the platform through OpenWebUI's chat interface, submitting requests for AI agent processing
+1. **User Input**: Users interact with the platform through Open WebUI's chat interface, selecting a phase model or the SDLC Supervisor and submitting a request.
 
-2. **n8n-Pipe Function**: OpenWebUI uses a custom Python function called "n8n-pipe" to bridge communication with n8n:
+2. **PIPE Function**: Each Open WebUI model is backed by a custom Python PIPE function that bridges communication with n8n:
    - Intercepts user messages instead of sending them directly to an AI model
-   - Forwards requests to n8n workflows via webhooks
+   - Forwards requests to the corresponding n8n workflow via webhook
    - Maintains session management for continuous conversations
 
-3. **Webhook Trigger**: n8n receives the message through a webhook endpoint, which triggers the appropriate workflow containing the MAS implementation
+   ![Open WebUI Functions](readme_images/Agentic_Agent_Garage/openwebui_functions.png)
 
-4. **Agent Processing**: Within n8n workflows:
-   - AI agents access Large Language Models (LLMs) through Ollama
-   - Agents can interact with external systems (e.g., Jira) via MCP clients
-   - Multiple specialized agents collaborate to process the request
+3. **Webhook Trigger**: n8n receives the message through a webhook endpoint, triggering the appropriate Orchestrator Agent workflow.
 
-5. **Response Delivery**: The generated response is sent back to OpenWebUI via webhook, where it's formatted with features like:
-   - Markdown rendering
-   - Code syntax highlighting
-   - Structured message display
+4. **Agent Processing**: Within n8n, the Orchestrator Agent:
+   - Uses a language model for reasoning and dialogue
+   - Maintains conversation context via Window Buffer Memory
+   - Dynamically loads Claude Code skill definitions via the `load_skill` tool
+   - Calls MCP connectors to interact with external systems (Jira, GitHub, SonarQube, etc.)
+
+5. **Response Delivery**: The generated response is sent back to Open WebUI via webhook, where it's rendered with markdown formatting, code syntax highlighting, and structured display.
 
 ### The n8n-Pipe Function
 
-The n8n-pipe is a Python function that bridges OpenWebUI with n8n workflows. Key features include:
+The n8n-pipe is a Python function that bridges Open WebUI with n8n workflows. Key features include:
 
 - **Webhook Configuration**: Configurable n8n webhook URL and bearer token authentication
 - **Field Mapping**: Customizable input and output field names for data exchange
@@ -820,20 +679,14 @@ The n8n-pipe is a Python function that bridges OpenWebUI with n8n workflows. Key
 
 ### Integration with External Systems
 
-The platform extends existing tools rather than replacing them. Through n8n's extensive node library and MCP support, AI agents can:
+The platform extends your existing enterprise toolchain rather than replacing it. Through n8n's node library and MCP support, agents can:
 
-- Retrieve information from connected systems
-- Update data in external tools
-- Create new entries (e.g., Jira tickets)
-- Reduce manual data entry through automation
+- Read and push data to Jira, Confluence, and GitHub
+- Trigger CI/CD pipelines and quality gates
+- Query monitoring systems and alert on SLO breaches
+- Post updates to Slack and coordinate via PagerDuty
 
-### Technical Considerations
-
-While the current implementation demonstrates technical feasibility and serves as an excellent proof of concept, please note:
-
-- This is designed for experimentation and educational purposes
-- Security, scalability, and reliability aspects would need enhancement for production use
-- The underlying concept can be adapted for enterprise-ready solutions
+---
 
 ## 🤖 Chat-based Workflow Creation with n8n-MCP
 
@@ -875,6 +728,8 @@ The n8n-MCP Server gives AI assistants comprehensive access to n8n node document
 
 For more details and complete documentation, visit the [n8n-MCP Repository](https://github.com/czlonkowski/n8n-mcp).
 
+---
+
 ## Upgrading
 
 ### For Nvidia GPU Setups
@@ -898,6 +753,8 @@ docker compose --profile cpu pull
 docker compose create && docker compose --profile cpu up
 ```
 
+---
+
 ## 👓 Recommended Reading
 
 n8n is full of useful content for getting started quickly with its AI concepts and nodes.
@@ -908,9 +765,13 @@ n8n is full of useful content for getting started quickly with its AI concepts a
 - [Demonstration of key differences between agents and chains](https://docs.n8n.io/advanced-ai/examples/agent-chain-comparison/)
 - [What are vector databases?](https://docs.n8n.io/advanced-ai/examples/understand-vector-databases/)
 
+---
+
 ## 🎥 Video Walkthrough
 
 - [Installing and using Local AI for n8n](https://www.youtube.com/watch?v=xz_X2N-hPg0)
+
+---
 
 ## 🛍️ More AI Templates
 
@@ -935,12 +796,14 @@ your local n8n instance.
 - [Financial Documents Assistant using Qdrant and](https://n8n.io/workflows/2335-build-a-financial-documents-assistant-using-qdrant-and-mistralai/) [Mistral.ai](http://mistral.ai/)
 - [Recipe Recommendations with Qdrant and Mistral](https://n8n.io/workflows/2333-recipe-recommendations-with-qdrant-and-mistral/)
 
+---
+
 ## 💡 Tips & Tricks
 
 ### Accessing Local Files
 
 Agent Garage will create a shared folder (by default, located in the same directory) which is mounted to the n8n container and allows n8n to access files on disk. This folder within the n8n container is
-located at `/data/shared` -- this is the path you’ll need to use in nodes that
+located at `/data/shared` -- this is the path you'll need to use in nodes that
 interact with the local filesystem.
 
 **Nodes that interact with the local filesystem:**
@@ -951,9 +814,11 @@ interact with the local filesystem.
 
 > [!NOTE]
 > This starter kit is designed to help you get started with self-hosted AI
-> workflows. While it’s not fully optimized for production environments, it
+> workflows. While it's not fully optimized for production environments, it
 > combines robust components that work well together for proof-of-concept
 > projects. You can customize it to meet your specific needs
+
+---
 
 ## 📜 License
 
