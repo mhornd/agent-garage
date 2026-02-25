@@ -1,5 +1,7 @@
 # Agentic Agent Garage
 
+![SDLC Supervisor in Open WebUI](readme_images/Agentic_Agent_Garage/agentic_agent_garage.jpeg)
+
 **Your engineering team has AI assistants. Now give Agentic AI to your entire SDLC.**
 
 Most teams use AI for isolated tasks — a code completion here, a ticket summary there. The **Agentic Agent Garage** is something different: a coordinated fleet of **69 specialized AI agents with ~180 Skills across 17 SDLC phases**, orchestrated end-to-end from the first business idea to post-production incident response.
