@@ -1,0 +1,4 @@
+[submodule "marketplace"]
+	path = marketplace
+	url = https://github.com/mhornd/twodigits-marketplace.git
+	branch = sdlc_expansion
