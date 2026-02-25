@@ -71,7 +71,7 @@ Use of this project does not imply any affiliation with or endorsement by Accent
 
 🎛️ **SDLC Supervisor:** A single entry point that automatically routes any request to the right phase agent. No need to know which agent handles what — just describe the task.
 
-🧠 **Three-Tier Architecture:** Every phase follows the same pattern — Orchestrators (phase entry), Agents (workflow execution), Skills (atomic operations). Pick the level of abstraction that fits your task.
+🧠 **Three-Tier Architecture:** Every phase follows the same pattern — Orchestrators (phase entry), Agents (workflow execution), Skills/MCP-Server (operations). Pick the level of abstraction that fits your task.
 
 🛍️ **Claude Code Marketplace:** SDLC phase plugins are installable as Claude Code skill packages. 180 slash-command skills available directly in your IDE — `/fix-bug`, `/generate-tests`, `/rollback-plan`, and more.
 
